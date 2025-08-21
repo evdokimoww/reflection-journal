@@ -5,7 +5,6 @@ import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
 import NavItem from "@/components/NavItem";
 import { SIDEBAR_MENU_LINKS } from "@/shared/data/sidebar.data";
 import { usePathname } from "next/navigation";
-import { match } from "path-to-regexp";
 import { PAGES } from "@/config/pages.config";
 
 type BottomLinkProps = {
@@ -29,6 +28,7 @@ const BottomLink = ({ isActive = false, children }: BottomLinkProps) => (
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const originalPathname = "/" + (pathname.split("/").filter(Boolean)[0] || "");
 
   return (
     <Flex
@@ -40,8 +40,8 @@ export default function Sidebar() {
       justify="space-between"
     >
       <Box>
-        <Flex h="20" mx="8" direction="column" justify="center">
-          <Text fontSize="2xl" fontWeight="bold">
+        <Flex h="20" mx="8" mb="8" direction="column" justify="center">
+          <Text fontSize={{ md: "lg", lg: "xl" }} fontWeight="bold">
             Reflection Journal
           </Text>
         </Flex>
@@ -50,7 +50,7 @@ export default function Sidebar() {
             <NavItem
               key={link.name}
               link={link}
-              isActive={!!match(link.href)(pathname)}
+              isActive={link.href === originalPathname}
             />
           ))}
         </Flex>
@@ -66,7 +66,7 @@ export default function Sidebar() {
         </Avatar.Root>
         <Box>
           <Link href={PAGES.PROFILE}>
-            <BottomLink isActive={!!match(PAGES.PROFILE)(pathname)}>
+            <BottomLink isActive={PAGES.PROFILE.includes(originalPathname)}>
               username@mail.ru
             </BottomLink>
           </Link>

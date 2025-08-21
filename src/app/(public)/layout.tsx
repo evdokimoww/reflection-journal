@@ -1,16 +1,16 @@
 import React, { PropsWithChildren } from "react";
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import Sidebar from "@/components/Sidebar";
+import ContentHeader from "@/components/ContentHeader";
 
 export default function PublicLayout({ children }: PropsWithChildren<unknown>) {
   return (
-    <Grid templateColumns="repeat(8, 1fr)" gap="6">
-      <GridItem colSpan={1}>
-        <Sidebar />
-      </GridItem>
-      <GridItem colSpan={7} p="8">
+    <Flex minH="100vh" w="100%">
+      <Sidebar />
+      <Box px="8" minH="100vh" w="100%" position="relative">
+        <ContentHeader />
         {children}
-      </GridItem>
-    </Grid>
+      </Box>
+    </Flex>
   );
 }

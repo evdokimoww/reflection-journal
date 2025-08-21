@@ -1,9 +1,9 @@
 export const PAGES = {
   DASHBOARD: "/",
-  NOTES: "/notes",
-  CREATE_NOTE: "/create",
+  ENTRIES: "/entries",
+  CREATE_ENTRY: "/create",
+  ENTRY: (id: string) => `/entries/${id}`,
   METHODOLOGIES: "/methodologies",
   PROFILE: "/profile",
   AUTH: "/auth",
-  NOTE: (id: string) => `/notes/${id}`,
 };
