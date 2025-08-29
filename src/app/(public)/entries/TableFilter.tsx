@@ -6,24 +6,26 @@ interface IProps {
   fieldName: string;
   items: ITableSortFilterItem[];
   onSelectChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+  defaultValue: string;
 }
 
 export function TableSingleFilter({
   fieldName,
   items,
   onSelectChange,
+  defaultValue,
 }: IProps) {
   return (
     <Flex fontSize="xs" align="center" gap="2">
       {fieldName}:
       <NativeSelect.Root variant="plain" size="xs" fontWeight="semibold">
-        <NativeSelect.Field placeholder="-" onChange={onSelectChange}>
+        <NativeSelect.Field
+          placeholder="-"
+          onChange={onSelectChange}
+          defaultValue={defaultValue}
+        >
           {items.map((item) => (
-            <option
-              key={item.value}
-              value={item.value}
-              selected={item.selected}
-            >
+            <option key={item.value} value={item.value}>
               {item.label}
             </option>
           ))}

@@ -42,17 +42,20 @@ export function TableFilters() {
         fieldName="Сортировка"
         items={TABLE_SORT_ITEMS}
         onSelectChange={handleSortingChange}
+        defaultValue={TABLE_SORT_ITEMS[0].value}
       />
       <TableSingleFilter
         fieldName="Фильтрация"
         items={TABLE_FILTER_ITEMS}
         onSelectChange={handleFiltrationMethodChange}
+        defaultValue={TABLE_FILTER_ITEMS[0].value}
       />
       {filtration === FilterVariants.Methodology && (
         <TableSingleFilter
           fieldName="Методология"
           items={TABLE_FILTER_METHODOLOGY_ITEMS}
           onSelectChange={handleMetodologyTypeChange}
+          defaultValue={TABLE_FILTER_METHODOLOGY_ITEMS[0].value}
         />
       )}
       {filtration === FilterVariants.Tag && (
@@ -60,6 +63,7 @@ export function TableFilters() {
           fieldName="Тег"
           items={TABLE_FILTER_TAGS_ITEMS}
           onSelectChange={handleTagsChange}
+          defaultValue={TABLE_FILTER_TAGS_ITEMS[0].value}
         />
       )}
       {filtration === FilterVariants.Date && (

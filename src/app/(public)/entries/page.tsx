@@ -1,15 +1,25 @@
+"use client";
+
 import { Box, Table } from "@chakra-ui/react";
 import React from "react";
 import { format } from "date-fns";
 import { REFLECTION_ENTRIES } from "@/shared/data/reflection-entries.data";
 import { METHODOLOGIES_NAMES } from "@/shared/data/methodolodies.data";
 import { TableFilters } from "@/app/(public)/entries/TableFilters";
+import { PAGES } from "@/config/pages.config";
+import { useRouter } from "next/navigation";
 
 export default function EntriesPage() {
+  const router = useRouter();
+
+  const handleRowDoubleClick = (id: string) => {
+    router.push(PAGES.ENTRY(id));
+  };
+
   return (
     <Box>
       <TableFilters />
-      <Table.Root size="sm" striped>
+      <Table.Root size="sm" striped interactive>
         <Table.Header>
           <Table.Row>
             <Table.ColumnHeader w="160px">Дата</Table.ColumnHeader>
@@ -20,7 +30,11 @@ export default function EntriesPage() {
         </Table.Header>
         <Table.Body>
           {REFLECTION_ENTRIES.map((item) => (
-            <Table.Row key={item.id}>
+            <Table.Row
+              key={item.id}
+              cursor="pointer"
+              onDoubleClick={() => handleRowDoubleClick(item.id)}
+            >
               <Table.Cell>
                 {format(item.createdAt, "dd.MM.yyyy HH:mm")}
               </Table.Cell>
