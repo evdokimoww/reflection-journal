@@ -1,5 +1,6 @@
 import React from "react";
+import { MethodologyForm } from "@/components/methodology-form/MethodologyForm";
 
 export default function EntryPage() {
-  return <div>Entry id</div>;
+  return <MethodologyForm />;
 }

@@ -14,9 +14,9 @@ export default function DashboardPage() {
           <Text fontSize="md" mb="4">
             Стрик: 4 дня подряд! Продолжай в том же духе!
           </Text>
-          <Button size="lg">
-            <Link href={PAGES.CREATE_ENTRY}>+ Новая запись</Link>
-          </Button>
+          <Link href={PAGES.CREATE_ENTRY}>
+            <Button size="lg">+ Новая запись</Button>
+          </Link>
         </Flex>
       </AbsoluteCenter>
     </Box>
