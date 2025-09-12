@@ -6,4 +6,8 @@ export const PAGES = {
   METHODOLOGIES: "/methodologies",
   PROFILE: "/profile",
   AUTH: "/auth",
+  FORGOT_PASSWORD: "/auth/forgot-password",
+  UPDATE_PASSWORD: "/auth/update-password",
 };
+
+export const PAGES_WITHOUT_AUTH = ["/auth", "/auth/forgot-password"];
