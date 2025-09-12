@@ -9,7 +9,7 @@ interface IProps {
   defaultValue: string;
 }
 
-export function TableSingleFilter({
+export function EntriesTableSingleFilter({
   fieldName,
   items,
   onSelectChange,

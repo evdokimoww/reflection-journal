@@ -2,31 +2,17 @@
 
 import Link from "next/link";
 import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
-import NavItem from "@/components/NavItem";
+import NavItem from "@/components/public/NavItem";
 import { SIDEBAR_MENU_LINKS } from "@/shared/data/sidebar.data";
 import { usePathname } from "next/navigation";
 import { PAGES } from "@/config/pages.config";
+import { SidebarBottomLink } from "@/components/public/SidebarBottomLink";
 
-type BottomLinkProps = {
-  isActive?: boolean;
-  children: React.ReactNode;
-};
+interface ISidebarProps {
+  onSignOut: () => void;
+}
 
-const BottomLink = ({ isActive = false, children }: BottomLinkProps) => (
-  <Box
-    fontSize="14px"
-    fontWeight={isActive ? "bold" : "normal"}
-    color="gray.400"
-    _hover={{
-      textDecoration: "underline",
-      cursor: "pointer",
-    }}
-  >
-    {children}
-  </Box>
-);
-
-export default function Sidebar() {
+export default function Sidebar({ onSignOut }: ISidebarProps) {
   const pathname = usePathname();
   const originalPathname = "/" + (pathname.split("/").filter(Boolean)[0] || "");
 
@@ -66,12 +52,14 @@ export default function Sidebar() {
         </Avatar.Root>
         <Box>
           <Link href={PAGES.PROFILE}>
-            <BottomLink isActive={PAGES.PROFILE.includes(originalPathname)}>
+            <SidebarBottomLink
+              isActive={PAGES.PROFILE.includes(originalPathname)}
+            >
               username@mail.ru
-            </BottomLink>
+            </SidebarBottomLink>
           </Link>
           <Link href={PAGES.AUTH}>
-            <BottomLink>Выйти</BottomLink>
+            <SidebarBottomLink onClick={onSignOut}>Выйти</SidebarBottomLink>
           </Link>
         </Box>
       </Flex>

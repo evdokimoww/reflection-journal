@@ -9,11 +9,11 @@ import {
   TABLE_FILTER_TAGS_ITEMS,
   TABLE_SORT_ITEMS,
 } from "@/shared/data/entries-table-filters.data";
-import { TableSingleFilter } from "@/app/(public)/entries/TableFilter";
+import { EntriesTableSingleFilter } from "@/components/entries/EntriesTableSingleFilter";
 import { format } from "date-fns";
 import { INPUT_DATE_FORMAT } from "@/shared/constants";
 
-export function TableFilters() {
+export function EntriesTableFilters() {
   const [filtration, setFiltration] = useState<FilterVariants | "">("");
 
   const handleSortingChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -38,20 +38,20 @@ export function TableFilters() {
 
   return (
     <Flex gap="8" mb="4">
-      <TableSingleFilter
+      <EntriesTableSingleFilter
         fieldName="Сортировка"
         items={TABLE_SORT_ITEMS}
         onSelectChange={handleSortingChange}
         defaultValue={TABLE_SORT_ITEMS[0].value}
       />
-      <TableSingleFilter
+      <EntriesTableSingleFilter
         fieldName="Фильтрация"
         items={TABLE_FILTER_ITEMS}
         onSelectChange={handleFiltrationMethodChange}
         defaultValue={TABLE_FILTER_ITEMS[0].value}
       />
       {filtration === FilterVariants.Methodology && (
-        <TableSingleFilter
+        <EntriesTableSingleFilter
           fieldName="Методология"
           items={TABLE_FILTER_METHODOLOGY_ITEMS}
           onSelectChange={handleMetodologyTypeChange}
@@ -59,7 +59,7 @@ export function TableFilters() {
         />
       )}
       {filtration === FilterVariants.Tag && (
-        <TableSingleFilter
+        <EntriesTableSingleFilter
           fieldName="Тег"
           items={TABLE_FILTER_TAGS_ITEMS}
           onSelectChange={handleTagsChange}

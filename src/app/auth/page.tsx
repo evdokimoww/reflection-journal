@@ -1,38 +1,101 @@
 "use client";
 
-import { useState } from "react";
-import { AuthForm } from "@/app/auth/AuthForm";
+import { AuthForm } from "@/components/auth/AuthForm";
 import { AuthMode } from "@/shared/types/auth.types";
-import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useAuthStore } from "@/stores/auth-store-provider";
+import { toaster } from "@/components/ui/toaster";
+import { AuthError } from "@supabase/auth-js";
+import { signIn, signUp } from "@/app/auth/actions";
 
-export interface FormValues {
-  username: string;
+export interface IAuthForm {
+  email: string;
   password: string;
 }
 
 export default function AuthPage() {
-  const [authMode, setAuthMode] = useState<AuthMode>(AuthMode.Login);
-
+  const { authMode, setAuthMode, isLoading, setIsLoading } = useAuthStore(
+    (state) => state,
+  );
   const {
-    register,
+    control,
     handleSubmit,
+    reset,
+    setError,
     formState: { errors },
-  } = useForm<FormValues>();
+  } = useForm<IAuthForm>({
+    mode: "onBlur",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => console.log(data);
+  const handleSighUp = async (formData: IAuthForm) => {
+    try {
+      setIsLoading(true);
 
-  const onError: SubmitErrorHandler<FormValues> = (errors) =>
-    console.log(errors);
+      const { error }: { error: Error | null } = await signUp(formData);
 
-  const handleFormSubmit = () => handleSubmit(onSubmit, onError);
+      if (error) throw error;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toaster.create({ title: error.message, type: "error" });
+        setError("email", { type: "manual" });
+      } else {
+        console.error("Неизвестная ошибка", error);
+        toaster.create({ title: "Неизвестная ошибка", type: "error" });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSighIn = async (formData: IAuthForm) => {
+    try {
+      setIsLoading(true);
+      const { error }: { error: AuthError | null } = await signIn(formData);
+
+      if (error) throw error;
+    } catch (error: unknown) {
+      if (error instanceof Error && error.name === "AuthApiError") {
+        toaster.create({
+          title: "Ошибка авторизации. Неверный логин или пароль",
+          type: "error",
+        });
+        setError("email", { type: "manual" });
+        setError("password", { type: "manual" });
+      } else {
+        console.error("Неизвестная ошибка", error);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const onSubmit: SubmitHandler<IAuthForm> = async (formData) => {
+    if (authMode === AuthMode.Registration) {
+      await handleSighUp(formData);
+    }
+
+    if (authMode === AuthMode.Login) {
+      await handleSighIn(formData);
+    }
+  };
+
+  const handleChangeAuthMode = (authMode: AuthMode) => {
+    reset();
+    setAuthMode(authMode);
+  };
 
   return (
     <AuthForm
       authMode={authMode}
-      setAuthMode={setAuthMode}
-      onFormSubmit={handleFormSubmit}
-      formRegister={register}
+      onChangeAuthMode={handleChangeAuthMode}
+      onFormSubmit={handleSubmit(onSubmit)}
+      control={control}
       formErrors={errors}
+      isLoading={isLoading}
     />
   );
 }
