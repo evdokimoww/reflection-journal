@@ -28,8 +28,8 @@ export default function UpdatePasswordPage() {
     }
   }, [error]);
 
-  const onSubmit = async (formData: IUpdatePasswordForm) => {
-    await fetchUpdatePassword(formData);
+  const onSubmit = (formData: IUpdatePasswordForm) => {
+    fetchUpdatePassword(formData);
   };
 
   return (

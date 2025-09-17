@@ -39,21 +39,21 @@ export default function AuthPage() {
     }
   }, [error]);
 
-  const handleSighUp = async (formData: IAuthForm) => {
-    await fetchSignUp(formData);
+  const handleSighUp = (formData: IAuthForm) => {
+    fetchSignUp(formData);
   };
 
-  const handleSighIn = async (formData: IAuthForm) => {
-    await fetchSignIn(formData);
+  const handleSighIn = (formData: IAuthForm) => {
+    fetchSignIn(formData);
   };
 
-  const onSubmit: SubmitHandler<IAuthForm> = async (formData) => {
+  const onSubmit: SubmitHandler<IAuthForm> = (formData) => {
     if (authMode === AuthMode.Registration) {
-      await handleSighUp(formData);
+      handleSighUp(formData);
     }
 
     if (authMode === AuthMode.Login) {
-      await handleSighIn(formData);
+      handleSighIn(formData);
     }
   };
 

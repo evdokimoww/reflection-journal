@@ -30,8 +30,8 @@ export default function ForgotPasswordPage() {
     }
   }, [error]);
 
-  const onSubmit = async (formData: IForgotPasswordForm) => {
-    await fetchForgotPassword(formData);
+  const onSubmit = (formData: IForgotPasswordForm) => {
+    fetchForgotPassword(formData);
   };
 
   const handleBackButtonClick = () => {
