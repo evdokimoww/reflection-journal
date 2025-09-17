@@ -1,31 +1,36 @@
 "use client";
 
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useEffect } from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import Sidebar from "@/components/public/Sidebar";
 import ContentHeader from "@/components/public/ContentHeader";
-import { signOut } from "@/app/(public)/actions";
-import { toaster } from "@/components/ui/toaster";
+import { usePublicStore } from "@/stores/public-store-provider";
+import { createToastError } from "@/utils/utils";
+import { GlobalLoader } from "@/components/public/GlobalLoader";
 
 export default function PublicLayout({ children }: PropsWithChildren<unknown>) {
-  const handleSignOut = async () => {
-    const { error } = await signOut();
+  const { isLoading, error, fetchSignOut } = usePublicStore((state) => state);
 
+  useEffect(() => {
     if (error) {
-      toaster.create({
-        title: error.message,
-        type: "error",
-      });
+      createToastError(error);
     }
+  }, [error]);
+
+  const handleSignOut = async () => {
+    await fetchSignOut();
   };
 
   return (
-    <Flex minH="100vh" w="100%">
-      <Sidebar onSignOut={handleSignOut} />
-      <Box px="8" minH="100vh" w="100%" position="relative">
-        <ContentHeader />
-        {children}
-      </Box>
-    </Flex>
+    <>
+      {isLoading && <GlobalLoader />}
+      <Flex minH="100vh" w="100%">
+        <Sidebar onSignOut={handleSignOut} />
+        <Box px="8" minH="100vh" w="100%" position="relative">
+          <ContentHeader />
+          {children}
+        </Box>
+      </Flex>
+    </>
   );
 }

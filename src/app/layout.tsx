@@ -4,6 +4,7 @@ import "./globals.css";
 import React from "react";
 import Provider from "../components/ui/provider";
 import { Toaster } from "@/components/ui/toaster";
+import { PublicStoreProvider } from "@/stores/public-store-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,10 +24,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable}`}>
-        <Provider>
-          <Toaster />
-          {children}
-        </Provider>
+        <PublicStoreProvider>
+          <Provider>
+            <Toaster />
+            {children}
+          </Provider>
+        </PublicStoreProvider>
       </body>
     </html>
   );
