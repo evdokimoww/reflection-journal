@@ -3,12 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import { IAuthForm } from "@/app/auth/page";
-import { IForgotPasswordForm } from "@/app/auth/forgot-password/page";
 import { PAGES } from "@/config/pages.config";
 import { IUpdatePasswordForm } from "@/app/auth/update-password/page";
+import { IAuthForm, IForgotPasswordForm } from "@/shared/types/auth.types";
 
-export async function signIn(formData: IAuthForm) {
+export async function signInRequest(formData: IAuthForm) {
   const supabase = await createClient();
 
   const { error } = await supabase.auth.signInWithPassword(formData);
@@ -21,7 +20,7 @@ export async function signIn(formData: IAuthForm) {
   redirect("/");
 }
 
-export async function signUp(formData: IAuthForm) {
+export async function signUpRequest(formData: IAuthForm) {
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signInWithPassword(formData);
@@ -38,7 +37,7 @@ export async function signUp(formData: IAuthForm) {
   redirect("/");
 }
 
-export async function forgotPassword(formData: IForgotPasswordForm) {
+export async function forgotPasswordRequest(formData: IForgotPasswordForm) {
   const supabase = await createClient();
 
   const { error } = await supabase.auth.resetPasswordForEmail(formData.email, {
@@ -52,7 +51,7 @@ export async function forgotPassword(formData: IForgotPasswordForm) {
   return { error: null };
 }
 
-export async function updatePassword(formData: IUpdatePasswordForm) {
+export async function updatePasswordRequest(formData: IUpdatePasswordForm) {
   const supabase = await createClient();
 
   const { error } = await supabase.auth.updateUser(formData);

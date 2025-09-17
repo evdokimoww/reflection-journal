@@ -1,9 +1,8 @@
-import { Box, Button, Field, Flex, Input, Stack, Text } from "@chakra-ui/react";
-import { IAuthForm } from "@/app/auth/page";
+import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
 import React from "react";
-import { Control, Controller, FieldErrors } from "react-hook-form";
-import { IForgotPasswordForm } from "@/app/auth/forgot-password/page";
+import { Control, FieldErrors } from "react-hook-form";
 import { EmailFormField } from "@/components/auth/EmailFormField";
+import { IForgotPasswordForm } from "@/shared/types/auth.types";
 
 interface IForgotPasswordProps {
   onFormSubmit: () => void;

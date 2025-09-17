@@ -1,8 +1,8 @@
 import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
 import React from "react";
 import { Control, FieldErrors } from "react-hook-form";
-import { IUpdatePasswordForm } from "@/app/auth/update-password/page";
 import { PasswordFormField } from "@/components/auth/PasswordFormField";
+import type { IUpdatePasswordForm } from "@/shared/types/auth.types";
 
 interface IUpdatePasswordProps {
   onFormSubmit: () => void;

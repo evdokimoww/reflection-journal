@@ -1,6 +1,5 @@
 import { Box, Button, Flex, SegmentGroup, Stack, Text } from "@chakra-ui/react";
-import { AuthMode } from "@/shared/types/auth.types";
-import { IAuthForm } from "@/app/auth/page";
+import { AuthMode, type IAuthForm } from "@/shared/types/auth.types";
 import React from "react";
 import { Control, FieldErrors } from "react-hook-form";
 import Link from "next/link";
