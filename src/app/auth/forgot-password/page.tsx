@@ -1,18 +1,30 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useAuthStore } from "@/stores/auth-store-provider";
+import { useAuthStore } from "@/shared/stores/auth-store-provider";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { createToastError } from "@/utils/utils";
+import { createToastError } from "@/shared/utils/utils";
 import type { IForgotPasswordForm } from "@/shared/types/auth.types";
+import { useShallow } from "zustand/shallow";
 
+interface IAuthSelector {
+  isLoading: boolean;
+  error: Error | null;
+  fetchForgotPassword: (formData: IForgotPasswordForm) => Promise<void>;
+}
 export default function ForgotPasswordPage() {
-  const { isLoading, fetchForgotPassword, error } = useAuthStore(
-    (state) => state,
+  const { isLoading, error, fetchForgotPassword } = useAuthStore<IAuthSelector>(
+    useShallow((state) => ({
+      isLoading: state.isLoading,
+      error: state.error,
+      fetchForgotPassword: state.fetchForgotPassword,
+    })),
   );
+
   const router = useRouter();
+
   const {
     control,
     handleSubmit,

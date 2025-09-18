@@ -2,8 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
-import { PAGES } from "@/config/pages.config";
+import { createClient } from "@/shared/utils/supabase/server";
+import { PAGES } from "@/shared/config/pages.config";
 import { IUpdatePasswordForm } from "@/app/auth/update-password/page";
 import { IAuthForm, IForgotPasswordForm } from "@/shared/types/auth.types";
 import type { NextRequest } from "next/server";

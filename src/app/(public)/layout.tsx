@@ -1,15 +1,32 @@
 "use client";
 
-import React, { PropsWithChildren, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import Sidebar from "@/components/public/Sidebar";
 import ContentHeader from "@/components/public/ContentHeader";
-import { usePublicStore } from "@/stores/public-store-provider";
-import { createToastError } from "@/utils/utils";
-import { GlobalLoader } from "@/components/public/GlobalLoader";
+import { usePublicStore } from "@/shared/stores/public-store-provider";
+import { createToastError } from "@/shared/utils/utils";
+import { Loader } from "@/components/public/Loader";
+import { useShallow } from "zustand/shallow";
 
-export default function PublicLayout({ children }: PropsWithChildren<unknown>) {
-  const { isLoading, error, fetchSignOut } = usePublicStore((state) => state);
+interface IPublicSelector {
+  isLoading: boolean;
+  error: Error | null;
+  fetchSignOut: () => Promise<void>;
+}
+
+export default function PublicLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  const { isLoading, error, fetchSignOut } = usePublicStore<IPublicSelector>(
+    useShallow((state) => ({
+      isLoading: state.isLoading,
+      error: state.error,
+      fetchSignOut: state.fetchSignOut,
+    })),
+  );
 
   useEffect(() => {
     if (error) {
@@ -17,18 +34,20 @@ export default function PublicLayout({ children }: PropsWithChildren<unknown>) {
     }
   }, [error]);
 
-  const handleSignOut = async () => {
-    await fetchSignOut();
+  const handleSignOut = () => {
+    fetchSignOut();
   };
 
   return (
     <>
-      {isLoading && <GlobalLoader />}
+      {isLoading && <Loader />}
       <Flex minH="100vh" w="100%">
         <Sidebar onSignOut={handleSignOut} />
-        <Box px="8" minH="100vh" w="100%" position="relative">
+        <Box minH="100vh" w="100%" position="relative">
           <ContentHeader />
-          {children}
+          <Box p="8" h="calc(100vh - 80px)" overflowY="auto">
+            {children}
+          </Box>
         </Box>
       </Flex>
     </>

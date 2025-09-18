@@ -5,7 +5,7 @@ import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
 import NavItem from "@/components/public/NavItem";
 import { SIDEBAR_MENU_LINKS } from "@/shared/data/sidebar.data";
 import { usePathname } from "next/navigation";
-import { PAGES } from "@/config/pages.config";
+import { PAGES } from "@/shared/config/pages.config";
 import { SidebarBottomLink } from "@/components/public/SidebarBottomLink";
 
 interface ISidebarProps {
@@ -18,15 +18,24 @@ export default function Sidebar({ onSignOut }: ISidebarProps) {
 
   return (
     <Flex
-      minH="100vh"
+      minH="100%"
       borderRightWidth="1px"
       borderRightColor="gray.300"
       w={{ md: 80 }}
       direction="column"
       justify="space-between"
+      overflow="hidden"
     >
       <Box>
-        <Flex h="20" mx="8" mb="8" direction="column" justify="center">
+        <Flex
+          h="20"
+          mx="8"
+          mb="8"
+          direction="column"
+          justify="center"
+          position="sticky"
+          top="0"
+        >
           <Text fontSize={{ md: "lg", lg: "xl" }} fontWeight="bold">
             Reflection Journal
           </Text>

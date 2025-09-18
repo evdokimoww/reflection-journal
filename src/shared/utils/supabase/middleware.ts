@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { PAGES_WITHOUT_AUTH } from "@/config/pages.config";
+import { PAGES_WITHOUT_AUTH } from "@/shared/config/pages.config";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({

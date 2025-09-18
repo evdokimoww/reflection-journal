@@ -10,7 +10,7 @@ import {
   signInRequest,
   signUpRequest,
   updatePasswordRequest,
-} from "@/api/auth";
+} from "@/shared/api/auth";
 
 export type AuthState = {
   authMode: AuthMode;

@@ -1,6 +1,6 @@
 import { Box, Center, Spinner } from "@chakra-ui/react";
 
-export function GlobalLoader() {
+export function Loader() {
   return (
     <Box pos="absolute" inset="0" bg="bg/90" zIndex="2">
       <Center h="full">

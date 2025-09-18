@@ -92,32 +92,35 @@ export function MethodologyFormView({
       )}
       {fields.map((field, index: number) => (
         <Flex key={field.id} gap="4" width="100%" justify="space-between">
-          <Flex gap="2" w="140px">
-            <ToggleTip
-              content={methodology.steps[index].hint}
-              positioning={{ placement: "top-start" }}
-              size="lg"
-            >
-              <Flex
-                w="20px"
-                h="20px"
-                borderRadius="full"
-                bg="gray.200"
-                justify="center"
-                align="center"
-                cursor="pointer"
+          <Flex gap="2" w="220px">
+            {methodology.steps[index]?.hint && (
+              <ToggleTip
+                content={methodology.steps[index].hint}
+                positioning={{ placement: "top-start" }}
+                size="lg"
               >
-                <Icon size="lg">
-                  <Image src={Question} alt="Logo" width={20} height={20} />
-                </Icon>
-              </Flex>
-            </ToggleTip>
+                <Flex
+                  w="20px"
+                  h="20px"
+                  borderRadius="full"
+                  bg="gray.200"
+                  justify="center"
+                  align="center"
+                  cursor="pointer"
+                >
+                  <Icon size="lg">
+                    <Image src={Question} alt="Logo" width={20} height={20} />
+                  </Icon>
+                </Flex>
+              </ToggleTip>
+            )}
+
             <Box>
               <Text fontWeight="bold" fontSize="md">
-                {methodology.steps[index].question}
+                {methodology.steps[index]?.question}
               </Text>
-              {methodology.steps[index].description && (
-                <Text fontSize="sm" color="gray.600">
+              {methodology.steps[index]?.description && (
+                <Text fontSize="xs" color="gray.600">
                   {methodology.steps[index].description}
                 </Text>
               )}

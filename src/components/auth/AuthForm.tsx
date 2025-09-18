@@ -3,7 +3,7 @@ import { AuthMode, type IAuthForm } from "@/shared/types/auth.types";
 import React from "react";
 import { Control, FieldErrors } from "react-hook-form";
 import Link from "next/link";
-import { PAGES } from "@/config/pages.config";
+import { PAGES } from "@/shared/config/pages.config";
 import { EmailFormField } from "@/components/auth/EmailFormField";
 import { PasswordFormField } from "@/components/auth/PasswordFormField";
 

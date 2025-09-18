@@ -3,13 +3,32 @@
 import { AuthForm } from "@/components/auth/AuthForm";
 import { AuthMode, type IAuthForm } from "@/shared/types/auth.types";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useAuthStore } from "@/stores/auth-store-provider";
+import { useAuthStore } from "@/shared/stores/auth-store-provider";
 import { useEffect } from "react";
-import { createToastError } from "@/utils/utils";
+import { createToastError } from "@/shared/utils/utils";
+import { useShallow } from "zustand/shallow";
+
+interface IAuthSelector {
+  authMode: AuthMode;
+  setAuthMode: (mode: AuthMode) => void;
+  isLoading: boolean;
+  error: Error | null;
+  fetchSignUp: (formData: IAuthForm) => Promise<void>;
+  fetchSignIn: (formData: IAuthForm) => Promise<void>;
+}
 
 export default function AuthPage() {
   const { authMode, setAuthMode, isLoading, error, fetchSignUp, fetchSignIn } =
-    useAuthStore((state) => state);
+    useAuthStore<IAuthSelector>(
+      useShallow((state) => ({
+        authMode: state.authMode,
+        setAuthMode: state.setAuthMode,
+        isLoading: state.isLoading,
+        error: state.error,
+        fetchSignUp: state.fetchSignUp,
+        fetchSignIn: state.fetchSignIn,
+      })),
+    );
 
   const {
     control,

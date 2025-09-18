@@ -15,7 +15,7 @@ export interface IForm {
 }
 
 interface IProps {
-  changedMethodology?: string;
+  changedMethodology: IMethodology;
 }
 
 export function MethodologyForm({ changedMethodology }: IProps) {
@@ -64,24 +64,16 @@ export function MethodologyForm({ changedMethodology }: IProps) {
   useEffect(() => {
     reset();
 
-    if (changedMethodology) {
-      const methodology = getMethodology(changedMethodology);
+    reset({
+      title: "",
+      tags: [],
+      steps: Array.from({ length: changedMethodology.steps.length }, () => ({
+        value: "",
+      })),
+    });
 
-      if (methodology) {
-        setMethodology(methodology);
-        // todo maybe wizard form logic
-        reset({
-          title: "",
-          tags: [],
-          steps: Array.from({ length: methodology.steps.length }, () => ({
-            value: "",
-          })),
-        });
-
-        if (tagInputRef.current) {
-          tagInputRef.current.value = "";
-        }
-      }
+    if (tagInputRef.current) {
+      tagInputRef.current.value = "";
     }
   }, [changedMethodology]);
 
@@ -101,14 +93,10 @@ export function MethodologyForm({ changedMethodology }: IProps) {
     console.log(data);
   };
 
-  if (!methodology) {
-    return null; // todo skeleton loader
-  }
-
   return (
     <>
       <MethodologyFormView
-        methodology={methodology}
+        methodology={changedMethodology}
         control={control}
         fields={fields}
         errors={errors}

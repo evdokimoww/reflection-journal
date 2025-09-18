@@ -1,17 +1,5 @@
 import { createStore } from "zustand/vanilla";
-import type {
-  AuthMode,
-  IAuthForm,
-  IForgotPasswordForm,
-  IUpdatePasswordForm,
-} from "@/shared/types/auth.types";
-import {
-  forgotPasswordRequest,
-  signInRequest,
-  signUpRequest,
-  updatePasswordRequest,
-} from "@/app/auth/actions";
-import { signOutRequest } from "@/app/(public)/actions";
+import { signOutRequest } from "@/shared/api/auth";
 
 export type PublicState = {
   isLoading: boolean;

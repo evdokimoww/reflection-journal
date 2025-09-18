@@ -6,7 +6,7 @@ import {
   createPublicStore,
   initPublicStore,
   type PublicStore,
-} from "@/stores/public-store";
+} from "@/shared/stores/public-store";
 
 export type PublicStoreApi = ReturnType<typeof createPublicStore>;
 

@@ -4,7 +4,7 @@ import "./globals.css";
 import React from "react";
 import Provider from "../components/ui/provider";
 import { Toaster } from "@/components/ui/toaster";
-import { PublicStoreProvider } from "@/stores/public-store-provider";
+import { PublicStoreProvider } from "@/shared/stores/public-store-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

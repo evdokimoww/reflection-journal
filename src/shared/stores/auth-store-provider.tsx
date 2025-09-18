@@ -6,7 +6,7 @@ import {
   type AuthStore,
   createAuthStore,
   initAuthStore,
-} from "@/stores/auth-store";
+} from "@/shared/stores/auth-store";
 
 export type AuthStoreApi = ReturnType<typeof createAuthStore>;
 

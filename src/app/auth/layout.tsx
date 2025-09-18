@@ -1,7 +1,7 @@
 import React from "react";
 import AuthPage from "@/app/auth/page";
 import { AbsoluteCenter, Box } from "@chakra-ui/react";
-import { AuthStoreProvider } from "@/stores/auth-store-provider";
+import { AuthStoreProvider } from "@/shared/stores/auth-store-provider";
 
 export default function AuthLayout({
   children,

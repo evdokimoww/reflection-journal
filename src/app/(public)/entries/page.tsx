@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { PAGES } from "@/config/pages.config";
+import { PAGES } from "@/shared/config/pages.config";
 import { useRouter } from "next/navigation";
 import { EntriesTable } from "@/components/entries/EntriesTable";
 
