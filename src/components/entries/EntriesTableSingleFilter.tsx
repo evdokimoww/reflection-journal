@@ -1,10 +1,10 @@
 import React, { ChangeEvent } from "react";
 import { Flex, NativeSelect } from "@chakra-ui/react";
-import { ITableSortFilterItem } from "@/shared/data/entries-table-filters.data";
+import { IFilterItem } from "@/shared/types/types";
 
 interface IProps {
   fieldName: string;
-  items: ITableSortFilterItem[];
+  items: IFilterItem[];
   onSelectChange: (e: ChangeEvent<HTMLSelectElement>) => void;
   defaultValue: string;
 }
@@ -20,7 +20,6 @@ export function EntriesTableSingleFilter({
       {fieldName}:
       <NativeSelect.Root variant="plain" size="xs" fontWeight="semibold">
         <NativeSelect.Field
-          placeholder="-"
           onChange={onSelectChange}
           defaultValue={defaultValue}
         >

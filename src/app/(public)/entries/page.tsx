@@ -1,16 +1,11 @@
-"use client";
-
 import React from "react";
-import { PAGES } from "@/shared/config/pages.config";
-import { useRouter } from "next/navigation";
-import { EntriesTable } from "@/components/entries/EntriesTable";
+import { EntriesComponent } from "@/app/(public)/entries/_component/page";
+import { EntriesStoreProvider } from "@/shared/stores/entries-store-provider";
 
 export default function EntriesPage() {
-  const router = useRouter();
-
-  const handleRowDoubleClick = (id: string) => {
-    router.push(PAGES.ENTRY(id));
-  };
-
-  return <EntriesTable onRowDoubleClick={handleRowDoubleClick} />;
+  return (
+    <EntriesStoreProvider>
+      <EntriesComponent />
+    </EntriesStoreProvider>
+  );
 }

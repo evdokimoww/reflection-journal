@@ -1,80 +1,76 @@
-"use client";
-
-import React, { ChangeEvent, useMemo, useState } from "react";
-import { Flex, Input, NativeSelect } from "@chakra-ui/react";
+import React, { ChangeEvent } from "react";
+import { Flex, Input } from "@chakra-ui/react";
 import {
-  FilterVariants,
+  FiltrationType,
+  SortingDirection,
   TABLE_FILTER_ITEMS,
-  TABLE_FILTER_METHODOLOGY_ITEMS,
-  TABLE_FILTER_TAGS_ITEMS,
   TABLE_SORT_ITEMS,
 } from "@/shared/data/entries-table-filters.data";
 import { EntriesTableSingleFilter } from "@/components/entries/EntriesTableSingleFilter";
-import { format } from "date-fns";
-import { INPUT_DATE_FORMAT } from "@/shared/constants";
+import { IFilterItem } from "@/shared/types/types";
 
-export function EntriesTableFilters() {
-  const [filtration, setFiltration] = useState<FilterVariants | "">("");
-
-  const handleSortingChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target.value);
+interface IProps {
+  sortingDirection: SortingDirection;
+  filtrationType: FiltrationType;
+  onSortingChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+  onFiltrationTypeChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+  onMethodologyTypeChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+  onTagsChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+  onDateChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  filterValues: {
+    methodologies: IFilterItem[];
+    tags: IFilterItem[];
   };
+  changedMethodologyFilterValue: string;
+  changedTagFilterValue: string;
+}
 
-  const handleFiltrationMethodChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const filterValue = e.target.value as FilterVariants | "";
-    setFiltration(filterValue);
-  };
-
-  const handleMetodologyTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target.value);
-  };
-
-  const handleTagsChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target.value);
-  };
-  const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
-  };
-
+export function EntriesTableFilters({
+  sortingDirection,
+  filtrationType,
+  onSortingChange,
+  onFiltrationTypeChange,
+  onMethodologyTypeChange,
+  onTagsChange,
+  onDateChange,
+  filterValues,
+  changedMethodologyFilterValue,
+  changedTagFilterValue,
+}: IProps) {
   return (
     <Flex gap="8" mb="4">
       <EntriesTableSingleFilter
         fieldName="Сортировка"
         items={TABLE_SORT_ITEMS}
-        onSelectChange={handleSortingChange}
-        defaultValue={TABLE_SORT_ITEMS[0].value}
+        onSelectChange={onSortingChange}
+        defaultValue={sortingDirection}
       />
       <EntriesTableSingleFilter
         fieldName="Фильтрация"
         items={TABLE_FILTER_ITEMS}
-        onSelectChange={handleFiltrationMethodChange}
-        defaultValue={TABLE_FILTER_ITEMS[0].value}
+        onSelectChange={onFiltrationTypeChange}
+        defaultValue={filtrationType}
       />
-      {filtration === FilterVariants.Methodology && (
+      {filtrationType === FiltrationType.Methodology && (
         <EntriesTableSingleFilter
           fieldName="Методология"
-          items={TABLE_FILTER_METHODOLOGY_ITEMS}
-          onSelectChange={handleMetodologyTypeChange}
-          defaultValue={TABLE_FILTER_METHODOLOGY_ITEMS[0].value}
+          items={filterValues.methodologies}
+          onSelectChange={onMethodologyTypeChange}
+          defaultValue={changedMethodologyFilterValue}
         />
       )}
-      {filtration === FilterVariants.Tag && (
+      {filtrationType === FiltrationType.Tag && (
         <EntriesTableSingleFilter
           fieldName="Тег"
-          items={TABLE_FILTER_TAGS_ITEMS}
-          onSelectChange={handleTagsChange}
-          defaultValue={TABLE_FILTER_TAGS_ITEMS[0].value}
+          items={filterValues.tags}
+          onSelectChange={onTagsChange}
+          defaultValue={changedTagFilterValue}
         />
       )}
-      {filtration === FilterVariants.Date && (
+      {filtrationType === FiltrationType.Date && (
         <Flex fontSize="xs" align="center" gap="2">
           Дата:
-          <Input
-            type="date"
-            size="xs"
-            defaultValue={format(new Date(), INPUT_DATE_FORMAT)}
-            onChange={handleDateChange}
-          />
+          <Input type="date" size="xs" onChange={onDateChange} />
         </Flex>
       )}
     </Flex>

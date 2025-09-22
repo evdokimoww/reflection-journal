@@ -6,7 +6,6 @@ import { createToastError } from "@/shared/utils/utils";
 import { Avatar, Button, Card, Dialog, Flex } from "@chakra-ui/react";
 import { MethodologyItemDialog } from "@/components/methodologies/MethodologyItemDialog";
 import { Loader } from "@/components/public/Loader";
-import { useAuthStore } from "@/shared/stores/auth-store-provider";
 import { useShallow } from "zustand/shallow";
 import type { IMethodology } from "@/shared/data/methodolodies.data";
 

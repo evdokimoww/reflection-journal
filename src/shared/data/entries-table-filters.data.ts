@@ -1,76 +1,38 @@
-import { METHODOLOGIES } from "@/shared/data/methodolodies.data";
-import { REFLECTION_ENTRIES } from "@/shared/data/reflection-entries.data";
+import { IFilterItem } from "@/shared/types/types";
 
-export interface ITableSortFilterItem {
-  label: string;
-  value: string;
-}
-
-enum SortVariants {
+export enum SortingDirection {
   Newest = "newest",
   Latest = "latest",
 }
 
-export enum FilterVariants {
+export enum FiltrationType {
+  None = "none",
   Methodology = "methodology",
   Tag = "tag",
   Date = "date",
 }
 
-export const TABLE_SORT_ITEMS: ITableSortFilterItem[] = [
-  { label: "Сначала новее", value: SortVariants.Newest },
-  { label: "Сначала старее", value: SortVariants.Latest },
+export const TABLE_SORT_ITEMS: IFilterItem[] = [
+  { label: "Сначала новее", value: SortingDirection.Newest },
+  { label: "Сначала старее", value: SortingDirection.Latest },
 ];
 
-export const TABLE_FILTER_ITEMS: ITableSortFilterItem[] = [
+export const TABLE_FILTER_ITEMS: IFilterItem[] = [
   {
     label: "отсутствует",
-    value: "none",
+    value: FiltrationType.None,
   },
   {
     label: "по методологии",
-    value: FilterVariants.Methodology,
+    value: FiltrationType.Methodology,
   },
-  { label: "по тегу", value: FilterVariants.Tag },
-  { label: "по дате", value: FilterVariants.Date },
+  { label: "по тегу", value: FiltrationType.Tag },
+  { label: "по дате", value: FiltrationType.Date },
 ];
 
-export const TABLE_FILTER_METHODOLOGY_ITEMS: ITableSortFilterItem[] =
-  METHODOLOGIES.reduce(
-    (acc, m) => {
-      acc.push({
-        label: m.title,
-        value: m.id,
-      });
-      return acc;
-    },
-    [
-      {
-        label: "не выбрано",
-        value: "none",
-      },
-    ] as ITableSortFilterItem[],
-  );
-
-// todo backend service
-const TagsSet = new Set<string>();
-REFLECTION_ENTRIES.forEach((entry) => {
-  entry.tags.forEach((tag) => {
-    TagsSet.add(tag);
-  });
-});
-export const TABLE_FILTER_TAGS_ITEMS: ITableSortFilterItem[] = [
-  {
-    label: "не выбрано",
-    value: "none",
-  },
-  ...Array.from(TagsSet).map((tag) => ({
-    label: tag,
-    value: tag,
-  })),
-];
-
-export const TABLE_FILTERS_OPTIONS = {
-  [FilterVariants.Methodology]: TABLE_FILTER_METHODOLOGY_ITEMS,
-  [FilterVariants.Tag]: TABLE_FILTER_TAGS_ITEMS,
+export const STATE_FIELDS_BY_FILTRATION_TYPE: Record<FiltrationType, string> = {
+  [FiltrationType.None]: "",
+  [FiltrationType.Methodology]: "changedMethodologyFilterValue",
+  [FiltrationType.Tag]: "changedTagFilterValue",
+  [FiltrationType.Date]: "changedDateFilterValue",
 };
