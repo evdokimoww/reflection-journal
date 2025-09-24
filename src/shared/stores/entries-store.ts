@@ -16,6 +16,7 @@ import {
 import { getFilterValuesResponseType } from "@/shared/types/api.types";
 import { IFilterItem } from "@/shared/types/types";
 import { subscribeWithSelector } from "zustand/middleware";
+import { DATE_TIME_FORMAT } from "@/shared/constants";
 
 export type FiltersValuesType = {
   changedMethodologyFilterValue: string;
@@ -119,7 +120,7 @@ export const createEntriesStore = (
               get()[currentFiltrationField as keyof FiltersValuesType];
           }
 
-          const result: { data: EntryResponseArray; error: Error } =
+          const result: { data: EntryResponseArray; error: Error | null } =
             await getEntriesRequest(isSortingAsc, filter);
 
           if (!!result.error) {
@@ -131,7 +132,7 @@ export const createEntriesStore = (
               ...acc,
               {
                 id: entry.id,
-                created_at: format(entry.created_at, "dd.MM.yyyy HH:mm"),
+                created_at: format(entry.created_at, DATE_TIME_FORMAT),
                 title: entry.title,
                 methodology: entry.methodology.title,
                 tags: entry.tags.map((item) => item.tag.value),

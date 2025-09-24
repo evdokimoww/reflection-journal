@@ -1,1 +1,1 @@
-export const INPUT_DATE_FORMAT = "yyyy-MM-dd";
+export const DATE_TIME_FORMAT = "dd.MM.yyyy HH:mm";

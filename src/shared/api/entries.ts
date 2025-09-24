@@ -52,7 +52,15 @@ export async function getEntriesRequest(
       query = query.gte("created_at", startDate).lte("created_at", endDate);
     }
 
-    const { data, error } = await query;
+    const { data, error } = await query.overrideTypes<
+      {
+        id: any;
+        created_at: any;
+        title: any;
+        methodology: { title: any }; // перезаписываем тип возвращаемых данных из-за генерации типизации ide (думает что methodology это массив)
+        tags: { tag: { id: any; value: any } }[];
+      }[]
+    >();
 
     if (error) {
       return { data: [], error };

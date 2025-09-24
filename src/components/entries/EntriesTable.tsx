@@ -14,7 +14,7 @@ export function EntriesTable({ entries, onRowDoubleClick }: IProps) {
         <Table.Row>
           <Table.ColumnHeader w="160px">Дата</Table.ColumnHeader>
           <Table.ColumnHeader>Краткое содержание</Table.ColumnHeader>
-          <Table.ColumnHeader>Методология</Table.ColumnHeader>
+          <Table.ColumnHeader w="200px">Методология</Table.ColumnHeader>
           <Table.ColumnHeader textAlign="end">Теги</Table.ColumnHeader>
         </Table.Row>
       </Table.Header>
@@ -33,7 +33,7 @@ export function EntriesTable({ entries, onRowDoubleClick }: IProps) {
                 {item.tags.length ? (
                   item.tags.map((t) => <Text key={t}>#{t}</Text>)
                 ) : (
-                  <Text>-</Text>
+                  <Text color="gray.400">теги не добавлены</Text>
                 )}
               </Table.Cell>
             </Table.Row>
