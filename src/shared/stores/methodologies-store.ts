@@ -1,5 +1,5 @@
 import { createStore } from "zustand/vanilla";
-import type { IMethodology } from "@/shared/data/methodolodies.data";
+import type { IMethodology } from "@/shared/types/methodologies.types";
 import { getMethodologiesRequest } from "@/shared/api/methodologies";
 
 export type MethodologiesState = {
@@ -33,11 +33,17 @@ export const createMethodologiesStore = (
       try {
         set({ isLoading: true, error: null });
 
-        const result = await getMethodologiesRequest();
+        const {
+          data,
+          error,
+        }: { data: IMethodology[] | null; error: Error | null } =
+          await getMethodologiesRequest();
 
-        if ("error" in result && result.error) throw result.error;
+        if (error) throw error;
 
-        set({ methodologies: result as IMethodology[] });
+        if (data) {
+          set({ methodologies: data });
+        }
       } catch (e) {
         set({ error: e as Error });
       } finally {

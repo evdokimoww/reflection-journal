@@ -14,8 +14,52 @@ export async function getMethodologiesRequest() {
       steps (*)`);
 
   if (error) {
-    return { error };
+    return { data: null, error };
   }
 
-  return data;
+  return { data, error: null };
+}
+
+export async function getMethodologyRequest(id: string) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("methodologies")
+    .select(
+      `
+      id,
+      title,
+      short_description,
+      description,
+      theory,
+      steps (*)`,
+    )
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    return { data: null, error };
+  }
+
+  return { data, error: null };
+}
+
+export async function getTagsRequest(searchString: string) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("tags")
+    .select(
+      `
+      id,
+      value`,
+    )
+    .ilike("value", `%${searchString.trim().toLowerCase()}%`)
+    .limit(5);
+
+  if (error) {
+    return { data: null, error };
+  }
+
+  return { data, error: null };
 }

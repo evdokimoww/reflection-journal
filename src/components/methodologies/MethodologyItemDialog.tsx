@@ -7,7 +7,7 @@ import {
   Portal,
   Text,
 } from "@chakra-ui/react";
-import { IMethodology } from "@/shared/data/methodolodies.data";
+import { IMethodology } from "@/shared/types/methodologies.types";
 
 interface IProps {
   methodology: IMethodology;

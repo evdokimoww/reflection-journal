@@ -7,7 +7,7 @@ import { Avatar, Button, Card, Dialog, Flex } from "@chakra-ui/react";
 import { MethodologyItemDialog } from "@/components/methodologies/MethodologyItemDialog";
 import { Loader } from "@/components/public/Loader";
 import { useShallow } from "zustand/shallow";
-import type { IMethodology } from "@/shared/data/methodolodies.data";
+import type { IMethodology } from "@/shared/types/methodologies.types";
 
 interface IMethodologiesSelector {
   methodologies: IMethodology[];
