@@ -1,6 +1,15 @@
 import React from "react";
-import { MethodologyForm } from "@/components/methodology-form/MethodologyForm";
+import { EntryForm } from "@/components/entry-form/EntryForm";
+import { EntryStoreProvider } from "@/shared/stores/entry-store-provider";
+import { EntryPageComponent } from "@/app/(public)/entries/[id]/_component/page";
+import { TagsStoreProvider } from "@/shared/stores/tags-store-provider";
 
 export default function EntryPage() {
-  return <MethodologyForm />;
+  return (
+    <EntryStoreProvider>
+      <TagsStoreProvider>
+        <EntryPageComponent />
+      </TagsStoreProvider>
+    </EntryStoreProvider>
+  );
 }

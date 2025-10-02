@@ -1,9 +1,9 @@
 import { Table, Text } from "@chakra-ui/react";
 import React from "react";
-import { IEntry } from "@/shared/types/reflection-entry.types";
+import { IEntryListItem } from "@/shared/types/entry.types";
 
 interface IProps {
-  entries: IEntry[];
+  entries: IEntryListItem[];
   onRowDoubleClick: (id: string) => void;
 }
 

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { EntriesTable } from "@/components/entries/EntriesTable";
 import { useShallow } from "zustand/shallow";
 import { createToastError } from "@/shared/utils/utils";
-import { IEntry } from "@/shared/types/reflection-entry.types";
+import { IEntryListItem } from "@/shared/types/entry.types";
 import {
   useEntriesStore,
   useEntriesStoreApi,
@@ -22,7 +22,7 @@ import { IFilterItem } from "@/shared/types/types";
 import { EntriesStateType } from "@/shared/stores/entries-store";
 
 interface IEntriesSelector {
-  entries: IEntry[];
+  entries: IEntryListItem[];
   isLoading: boolean;
   error: Error | null;
   fetchEntries: () => Promise<void>;

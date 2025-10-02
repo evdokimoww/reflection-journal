@@ -1,8 +1,8 @@
 import { createStore } from "zustand/vanilla";
 import type {
-  EntryResponseArray,
-  IEntry,
-} from "@/shared/types/reflection-entry.types";
+  EntriesResponseArray,
+  IEntryListItem,
+} from "@/shared/types/entry.types";
 import {
   getEntriesRequest,
   getFilterValuesRequest,
@@ -25,7 +25,7 @@ export type FiltersValuesType = {
 };
 
 export type EntriesStateType = {
-  entries: IEntry[];
+  entries: IEntryListItem[];
   isLoading: boolean;
   error: Error | null;
   sortingDirection: SortingDirection;
@@ -120,14 +120,17 @@ export const createEntriesStore = (
               get()[currentFiltrationField as keyof FiltersValuesType];
           }
 
-          const result: { data: EntryResponseArray; error: Error | null } =
+          const {
+            data,
+            error,
+          }: { data: EntriesResponseArray; error: Error | null } =
             await getEntriesRequest(isSortingAsc, filter);
 
-          if (!!result.error) {
-            throw result.error;
+          if (error) {
+            throw error;
           }
 
-          const mappedEntries = result.data.reduce(
+          const mappedEntries = data.reduce(
             (acc, entry) => [
               ...acc,
               {
@@ -138,7 +141,7 @@ export const createEntriesStore = (
                 tags: entry.tags.map((item) => item.tag.value),
               },
             ],
-            [] as IEntry[],
+            [] as IEntryListItem[],
           );
 
           set({ entries: mappedEntries });

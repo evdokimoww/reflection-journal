@@ -58,7 +58,7 @@ export async function getEntriesRequest(
         created_at: any;
         title: any;
         methodology: { title: any }; // перезаписываем тип возвращаемых данных из-за генерации типизации ide (думает что methodology это массив)
-        tags: { tag: { id: any; value: any } }[];
+        tags: { tag: { value: any } }[];
       }[]
     >();
 
@@ -84,4 +84,38 @@ export async function getFilterValuesRequest() {
     methodologies: { data: methodologies.data, error: methodologies.error },
     tags: { data: tags.data, error: tags.error },
   };
+}
+
+export async function getCurrentEntryRequest(id: string) {
+  const supabase = await createClient();
+
+  let query = supabase
+    .from("entries")
+    .select(
+      `
+      id,
+      title,
+      methodology:methodologies(id),
+      tags:entries_tags(
+        tag:tags(id, value)
+      ),
+      steps:entries_steps(id, value, step_id)`,
+    )
+    .eq("id", id)
+    .single()
+    .overrideTypes<{
+      id: any;
+      title: any;
+      methodology: { id: any }; // перезаписываем тип возвращаемых данных из-за генерации типизации ide (думает что methodology это массив)
+      tags: { tag: { id: any; value: any } }[];
+      steps: { id: any; value: any; step_id: any }[];
+    }>();
+
+  const { data, error } = await query;
+
+  if (error) {
+    return { data: null, error };
+  }
+
+  return { data, error: null };
 }

@@ -1,29 +1,48 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { Box, CheckboxGroup, Flex, HStack, RadioCard } from "@chakra-ui/react";
-import { IMethodology } from "@/shared/data/methodolodies.data";
-import { MethodologyForm } from "@/components/methodology-form/MethodologyForm";
+import { IMethodology } from "@/shared/types/methodologies.types";
 import { useMethodologiesStore } from "@/shared/stores/methodologies-store-provider";
 import { useShallow } from "zustand/shallow";
 import { Loader } from "@/components/public/Loader";
 import { createToastError } from "@/shared/utils/utils";
+import { EntryForm } from "@/components/entry-form/EntryForm";
+import { useTagsStore } from "@/shared/stores/tags-store-provider";
+import { ITag } from "@/shared/types/entry.types";
+import { ChangeMethodologyCards } from "@/components/entry-form/ChangeMethodologyCards";
 
 interface IMethodologiesSelector {
   methodologies: IMethodology[];
   isLoading: boolean;
-  error: Error | null;
+  methodologiesError: Error | null;
   fetchMethodologies: () => Promise<void>;
 }
 
-export function NoteCreateComponent() {
-  const { methodologies, error, isLoading, fetchMethodologies } =
+interface ITagsSelector {
+  tagsError: Error | null;
+  isTagsLoading: boolean;
+  searchedTags: ITag[];
+  fetchSearchedTags: (searchString: string) => Promise<void>;
+}
+
+export function EntryCreateComponent() {
+  const { methodologies, methodologiesError, isLoading, fetchMethodologies } =
     useMethodologiesStore<IMethodologiesSelector>(
       useShallow((state) => ({
         methodologies: state.methodologies,
         isLoading: state.isLoading,
-        error: state.error,
+        methodologiesError: state.error,
         fetchMethodologies: state.fetchMethodologies,
+      })),
+    );
+
+  const { tagsError, isTagsLoading, searchedTags, fetchSearchedTags } =
+    useTagsStore<ITagsSelector>(
+      useShallow((state) => ({
+        tagsError: state.error,
+        isTagsLoading: state.isTagsLoading,
+        searchedTags: state.searchedTags,
+        fetchSearchedTags: state.fetchSearchedTags,
       })),
     );
 
@@ -32,10 +51,9 @@ export function NoteCreateComponent() {
   }, []);
 
   useEffect(() => {
-    if (error) {
-      createToastError(error);
-    }
-  }, [error]);
+    if (methodologiesError) createToastError(methodologiesError);
+    if (tagsError) createToastError(tagsError);
+  }, [methodologiesError, tagsError]);
 
   const [changedMethodologyId, setChangedMethodologyId] = useState<string>("");
 
@@ -51,37 +69,17 @@ export function NoteCreateComponent() {
     <Loader />
   ) : (
     <>
-      <Box mb="8">
-        <CheckboxGroup maxW="800px">
-          Выбор методологии:
-          <Flex gap="2">
-            <RadioCard.Root>
-              <HStack align="stretch">
-                {methodologies.map((item) => (
-                  <RadioCard.Item
-                    key={item.id}
-                    value={item.id}
-                    onChange={() => handleMethodologyChange(item.id)}
-                  >
-                    <RadioCard.ItemHiddenInput />
-                    <RadioCard.ItemControl>
-                      <RadioCard.ItemContent>
-                        <RadioCard.ItemText>{item.title}</RadioCard.ItemText>
-                        <RadioCard.ItemDescription>
-                          {item.short_description}
-                        </RadioCard.ItemDescription>
-                      </RadioCard.ItemContent>
-                      <RadioCard.ItemIndicator />
-                    </RadioCard.ItemControl>
-                  </RadioCard.Item>
-                ))}
-              </HStack>
-            </RadioCard.Root>
-          </Flex>
-        </CheckboxGroup>
-      </Box>
+      <ChangeMethodologyCards
+        methodologies={methodologies}
+        onMethodologyChange={handleMethodologyChange}
+      />
       {changedMethodology && (
-        <MethodologyForm changedMethodology={changedMethodology} />
+        <EntryForm
+          methodology={changedMethodology}
+          isTagsLoading={isTagsLoading}
+          searchedTags={searchedTags}
+          onTagsSearch={fetchSearchedTags}
+        />
       )}
     </>
   );

@@ -7,30 +7,35 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import type { IMethodology } from "@/shared/data/methodolodies.data";
+import type { IMethodology, IStep } from "@/shared/types/methodologies.types";
 import Question from "@/shared/assets/icons/question.svg";
 import Image from "next/image";
 import React, { RefObject } from "react";
 import { ToggleTip } from "@/components/ui/toggle-tip";
 import { Control, Controller, FieldErrors } from "react-hook-form";
-import { IForm } from "@/components/methodology-form/MethodologyForm";
-import { MethodologyFormDialog } from "@/components/methodology-form/MethodologyFormDialog";
-import { TagsComponent } from "@/components/methodology-form/TagsComponent";
+import { IForm } from "@/components/entry-form/EntryForm";
+import { MethodologyFormDialog } from "@/components/entry-form/MethodologyFormDialog";
+import { TagsComponent } from "@/components/entry-form/TagsComponent";
+import { ITag } from "@/shared/types/entry.types";
 
 interface IProps {
   methodology: IMethodology;
   control: Control<IForm>;
-  fields: { id: string; value: string }[];
   errors: FieldErrors<IForm>;
   tagInputRef: RefObject<HTMLInputElement>;
+  onTagsSearch: (value: string) => void;
+  isTagsLoading: boolean;
+  searchedTags: ITag[];
 }
 
-export function MethodologyFormView({
+export function EntryFormView({
   methodology,
   control,
-  fields,
   errors,
   tagInputRef,
+  onTagsSearch,
+  isTagsLoading,
+  searchedTags,
 }: IProps) {
   return (
     <Flex direction="column" maxW="1200px" gap="6">
@@ -67,6 +72,9 @@ export function MethodologyFormView({
               tags={value}
               onFormChange={onChange}
               tagInputRef={tagInputRef}
+              onTagsSearch={onTagsSearch}
+              isTagsLoading={isTagsLoading}
+              searchedTags={searchedTags}
             />
           );
         }}
@@ -90,12 +98,12 @@ export function MethodologyFormView({
           )}
         </Flex>
       )}
-      {fields.map((field, index: number) => (
-        <Flex key={field.id} gap="4" width="100%" justify="space-between">
+      {methodology.steps.map((step: IStep, index: number) => (
+        <Flex key={step.id} gap="4" width="100%" justify="space-between">
           <Flex gap="2" w="220px">
-            {methodology.steps[index]?.hint && (
+            {step?.hint && (
               <ToggleTip
-                content={methodology.steps[index].hint}
+                content={step.hint}
                 positioning={{ placement: "top-start" }}
                 size="lg"
               >
@@ -117,11 +125,11 @@ export function MethodologyFormView({
 
             <Box>
               <Text fontWeight="bold" fontSize="md">
-                {methodology.steps[index]?.question}
+                {step?.question}
               </Text>
-              {methodology.steps[index]?.description && (
+              {step?.description && (
                 <Text fontSize="xs" color="gray.600">
-                  {methodology.steps[index].description}
+                  {step.description}
                 </Text>
               )}
             </Box>
