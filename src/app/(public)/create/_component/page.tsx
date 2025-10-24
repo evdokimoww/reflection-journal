@@ -8,8 +8,9 @@ import { Loader } from "@/components/public/Loader";
 import { createToastError } from "@/shared/utils/utils";
 import { EntryForm } from "@/components/entry-form/EntryForm";
 import { useTagsStore } from "@/shared/stores/tags-store-provider";
-import { ITag } from "@/shared/types/entry.types";
+import { IEntryRequestData, ITag } from "@/shared/types/entry.types";
 import { ChangeMethodologyCards } from "@/components/entry-form/ChangeMethodologyCards";
+import { useEntryStore } from "@/shared/stores/entry-store-provider";
 
 interface IMethodologiesSelector {
   methodologies: IMethodology[];
@@ -23,6 +24,11 @@ interface ITagsSelector {
   isTagsLoading: boolean;
   searchedTags: ITag[];
   fetchSearchedTags: (searchString: string) => Promise<void>;
+}
+
+interface IEntrySelector {
+  isEntryLoading: boolean;
+  createEntry: (data: IEntryRequestData) => void;
 }
 
 export function EntryCreateComponent() {
@@ -46,6 +52,13 @@ export function EntryCreateComponent() {
       })),
     );
 
+  const { createEntry, isEntryLoading } = useEntryStore<IEntrySelector>(
+    useShallow((state) => ({
+      isEntryLoading: state.isLoading,
+      createEntry: state.createEntry,
+    })),
+  );
+
   useEffect(() => {
     fetchMethodologies();
   }, []);
@@ -65,7 +78,7 @@ export function EntryCreateComponent() {
     setChangedMethodologyId(id);
   };
 
-  return isLoading ? (
+  return isLoading || isEntryLoading ? (
     <Loader />
   ) : (
     <>
@@ -79,6 +92,7 @@ export function EntryCreateComponent() {
           isTagsLoading={isTagsLoading}
           searchedTags={searchedTags}
           onTagsSearch={fetchSearchedTags}
+          saveEntry={createEntry}
         />
       )}
     </>

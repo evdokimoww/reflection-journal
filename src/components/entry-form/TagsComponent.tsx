@@ -84,19 +84,12 @@ export function TagsComponent({
     if (tagsValues.includes(changedTag.value)) return;
 
     onFormChange([...tags, { id: changedTag.id, value: changedTag.value }]);
+    handleTagInputClear();
   };
 
   const inputClearButton =
     tagInputRef.current && tagInputRef.current.value ? (
-      <CloseButton
-        size="xs"
-        onClick={() => {
-          if (tagInputRef.current) {
-            handleTagInputClear();
-          }
-        }}
-        me="-2"
-      />
+      <CloseButton size="xs" onClick={handleTagInputClear} me="-2" />
     ) : undefined;
 
   return (

@@ -91,6 +91,7 @@ export function EntryPageComponent() {
       searchedTags={searchedTags}
       onTagsSearch={fetchSearchedTags}
       isEditForm
+      saveEntry={() => {}} // TODO
     />
   );
 }

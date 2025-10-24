@@ -5,7 +5,10 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { EntryFormView } from "@/components/entry-form/EntryFormView";
 import { FormActionBar } from "@/components/entry-form/FormActionBar";
-import { IEntry, ITag } from "@/shared/types/entry.types";
+import { IEntry, IEntryRequestData, ITag } from "@/shared/types/entry.types";
+import { deepEqualFormValues } from "@/shared/utils/utils";
+import { useRouter } from "next/navigation";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export interface IForm {
   title: string;
@@ -20,6 +23,7 @@ interface IProps {
   isTagsLoading: boolean;
   searchedTags: ITag[];
   onTagsSearch: (searchString: string) => void;
+  saveEntry: (data: IEntryRequestData, router?: AppRouterInstance) => void;
 }
 
 export function EntryForm({
@@ -29,7 +33,9 @@ export function EntryForm({
   isTagsLoading,
   searchedTags,
   onTagsSearch,
+  saveEntry,
 }: IProps) {
+  const router = useRouter();
   const [defaultValues, setDefaultValues] = useState<IForm>({
     title: "",
     tags: [],
@@ -37,6 +43,12 @@ export function EntryForm({
   });
 
   const tagInputRef = useRef<HTMLInputElement>(null);
+
+  const handleTagInputClear = () => {
+    if (tagInputRef.current) {
+      tagInputRef.current.value = "";
+    }
+  };
 
   useEffect(() => {
     const updatedDefaultValues = { ...defaultValues };
@@ -64,24 +76,36 @@ export function EntryForm({
     control,
     handleSubmit,
     reset,
-    formState: { errors, isDirty },
+    formState: { errors },
+    watch,
   } = useForm<IForm>({
     mode: "onBlur",
     defaultValues,
   });
 
+  const currentFormValues = watch();
+
   useEffect(() => {
-    if (tagInputRef.current) {
-      tagInputRef.current.value = "";
-    }
+    handleTagInputClear();
 
     return () => {
       reset();
     };
   }, []);
 
+  const isFormDirty = useMemo(() => {
+    return !deepEqualFormValues(currentFormValues, defaultValues);
+  }, [currentFormValues]);
+
   const handleFormSubmit: SubmitHandler<IForm> = (data) => {
-    console.log(data);
+    if (methodology) {
+      saveEntry({ ...data, methodologyId: methodology.id }, router);
+    }
+  };
+
+  const handleFormRevert = () => {
+    handleTagInputClear();
+    reset(defaultValues);
   };
 
   const handleTagsSearch = (searchValue: string) => {
@@ -101,11 +125,11 @@ export function EntryForm({
         isTagsLoading={isTagsLoading}
         searchedTags={searchedTags}
       />
-      {isDirty && (
+      {isFormDirty && (
         <FormActionBar
           isEditForm={!!isEditForm}
           onFormClean={() => reset()}
-          onFormRevert={() => reset(defaultValues)}
+          onFormRevert={handleFormRevert}
           onFormSubmit={handleSubmit(handleFormSubmit)}
         />
       )}

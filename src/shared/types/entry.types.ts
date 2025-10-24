@@ -9,16 +9,6 @@ export interface ITag {
   value: string;
 }
 
-export interface IReflectionEntry {
-  id: string;
-  userId: string;
-  createdAt: Date;
-  methodId: string;
-  title: string; // заголовок, или главный вопрос
-  steps: IStep[]; // шаг — ответ
-  tags: ITag[];
-}
-
 interface EntryResponseTag {
   tag: ITag;
 }
@@ -60,4 +50,12 @@ export interface IEntryResponseItem {
   methodology: { id: string };
   tags: EntryResponseTag[];
   steps: IStep[];
+}
+
+export interface IEntryRequestData {
+  id?: string;
+  title: string;
+  methodologyId: string;
+  tags: { id?: string; value: string }[];
+  steps: { id: string; value: string }[];
 }

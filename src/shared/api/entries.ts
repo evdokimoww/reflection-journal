@@ -3,6 +3,7 @@
 import { createClient } from "@/shared/utils/supabase/server";
 import { FiltrationType } from "@/shared/data/entries-table-filters.data";
 import { endOfDay, parseISO, startOfDay } from "date-fns";
+import { IEntryRequestData } from "@/shared/types/entry.types";
 
 export async function getEntriesRequest(
   isSortAsc: boolean,
@@ -118,4 +119,70 @@ export async function getCurrentEntryRequest(id: string) {
   }
 
   return { data, error: null };
+}
+
+export async function createEntryRequest(formData: IEntryRequestData) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    // 1. Создание основной записи
+    const { data: entry, error: entryError } = await supabase
+      .from("entries")
+      .insert([
+        {
+          user_id: user.id,
+          title: formData.title,
+          methodology_id: formData.methodologyId,
+        },
+      ])
+      .select("id");
+
+    if (entryError) return { data: null, error: entryError };
+    const entryId = entry[0].id;
+
+    // 2. Привязка тегов
+    for (const tag of formData.tags) {
+      let tagId = tag.id;
+
+      // Если id нет, создаём тег
+      if (!tagId) {
+        const { data: newTag, error: newTagError } = await supabase
+          .from("tags")
+          .insert([{ value: tag.value }])
+          .select("id");
+
+        if (newTagError) return { data: null, error: newTagError };
+        tagId = newTag[0].id;
+      }
+
+      // Вставляем связь тега с записью
+      const { error: entriesTagError } = await supabase
+        .from("entries_tags")
+        .insert([{ entry_id: entryId, tag_id: tagId, user_id: user.id }]);
+
+      if (entriesTagError) return { data: null, error: entriesTagError };
+    }
+
+    // 3. Добавление шагов
+    const stepsData = formData.steps.map((step) => ({
+      entry_id: entryId,
+      value: step.value,
+      step_id: step.id,
+      user_id: user.id,
+    }));
+
+    const { error: entryStepsError } = await supabase
+      .from("entries_steps")
+      .insert(stepsData);
+
+    if (entryStepsError) return { data: null, error: entryStepsError };
+
+    return { data: entryId, error: entryError };
+  }
+
+  return { data: null, error: new Error("Пользователь не авторизован") };
 }

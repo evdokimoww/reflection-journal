@@ -19,7 +19,8 @@ export default function ContentHeader() {
       acc.push({
         link: p,
         name:
-          BREADCRUMPS_PAGE_NAMES[p as keyof typeof BREADCRUMPS_PAGE_NAMES] || p,
+          BREADCRUMPS_PAGE_NAMES[p as keyof typeof BREADCRUMPS_PAGE_NAMES] ||
+          "Просмотр и редактирование записи",
       });
     }
     return acc;
