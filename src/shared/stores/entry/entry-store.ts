@@ -1,73 +1,42 @@
-import { createStore } from "zustand/vanilla";
 import {
-  IEntry,
-  IEntryRequestData,
-  IEntryResponseItem,
-} from "@/shared/types/entry.types";
-import type { IMethodology } from "@/shared/types/methodologies.types";
+  EntryRequestData,
+  EntryResponseItem,
+  Methodology,
+  ResponseType,
+} from "@/shared/types";
 import {
   createEntryRequest,
   getCurrentEntryRequest,
 } from "@/shared/api/entries";
 import { getMethodologyRequest } from "@/shared/api/methodologies";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { PAGES } from "@/shared/config/pages.config";
-import { ResponseType } from "@/shared/types/types";
+import { PAGES } from "@/shared/constants.ts";
+import { EntryState, EntryStore } from "@/shared/stores/entry/types";
+import { create } from "zustand";
 
-export type EntryStateType = {
-  entry: IEntry | null;
-  currentMethodology: IMethodology | null;
-  isLoading: boolean;
-  entryError: Error | null;
-  methodologyError: Error | null;
-  createEntryError: Error | null;
-};
-
-export type EntryActionsType = {
-  fetchEntry: (id: string) => Promise<void>;
-  fetchMethodology: (id: string) => Promise<void>;
-  resetState: () => void;
-  createEntry: (data: IEntryRequestData, router?: AppRouterInstance) => void;
-};
-
-export type EntryStore = EntryStateType & EntryActionsType;
-
-export const initEntryStore = (): EntryStateType => {
-  return {
-    entry: null,
-    currentMethodology: null,
-    isLoading: false,
-    entryError: null,
-    methodologyError: null,
-    createEntryError: null,
-  };
-};
-
-export const defaultInitState: EntryStateType = {
+export const defaultInitState: EntryState = {
   entry: null,
   currentMethodology: null,
   isLoading: false,
   entryError: null,
   methodologyError: null,
   createEntryError: null,
+  removeEntryError: null,
 };
 
-export const createEntryStore = (
-  initState: EntryStateType = defaultInitState,
-) => {
-  return createStore<EntryStore>()((set, get) => ({
-    ...initState,
+export const useEntryStore = create<EntryStore>((set, get) => ({
+  ...defaultInitState,
+  actions: {
     fetchEntry: async (id: string) => {
       try {
         set({ isLoading: true, entryError: null });
 
-        const { data, error }: ResponseType<IEntryResponseItem> =
+        const { data, error }: ResponseType<EntryResponseItem> =
           await getCurrentEntryRequest(id);
 
         if (error) throw error;
 
         if (data.methodology.id) {
-          get().fetchMethodology(data.methodology.id);
+          get().actions.fetchMethodology(data.methodology.id);
         }
 
         set({
@@ -94,7 +63,7 @@ export const createEntryStore = (
       try {
         set({ isLoading: true, methodologyError: null });
 
-        const { data, error }: ResponseType<IMethodology> =
+        const { data, error }: ResponseType<Methodology> =
           await getMethodologyRequest(id);
 
         if (error) throw error;
@@ -106,7 +75,7 @@ export const createEntryStore = (
         set({ isLoading: false });
       }
     },
-    createEntry: async (entryData: IEntryRequestData, router) => {
+    createEntry: async (entryData: EntryRequestData, router) => {
       try {
         set({ isLoading: true, createEntryError: null });
 
@@ -122,6 +91,16 @@ export const createEntryStore = (
         set({ isLoading: false });
       }
     },
+    removeEntry: async (entryId, router) => {
+      try {
+        set({ isLoading: true, removeEntryError: null });
+        console.log("я тут");
+      } catch (e) {
+        set({ removeEntryError: e as Error });
+      } finally {
+        set({ isLoading: false });
+      }
+    },
     resetState: () => set(defaultInitState),
-  }));
-};
+  },
+}));

@@ -1,4 +1,4 @@
-import { IFilterItem } from "@/shared/types/types";
+import { FilterItem } from "@/shared/types";
 
 export enum SortingDirection {
   Newest = "newest",
@@ -12,12 +12,12 @@ export enum FiltrationType {
   Date = "date",
 }
 
-export const TABLE_SORT_ITEMS: IFilterItem[] = [
+export const TABLE_SORT_ITEMS: FilterItem[] = [
   { label: "Сначала новее", value: SortingDirection.Newest },
   { label: "Сначала старее", value: SortingDirection.Latest },
 ];
 
-export const TABLE_FILTER_ITEMS: IFilterItem[] = [
+export const TABLE_FILTER_ITEMS: FilterItem[] = [
   {
     label: "отсутствует",
     value: FiltrationType.None,

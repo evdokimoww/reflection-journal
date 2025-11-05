@@ -1,34 +1,22 @@
 "use client";
 
-import { AuthForm } from "@/components/auth/AuthForm";
-import { AuthMode, type IAuthForm } from "@/shared/types/auth.types";
+import { AuthFormComponent } from "@/components/auth/AuthFormComponent.tsx";
+import { AuthMode, AuthForm } from "@/shared/types";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useAuthStore } from "@/shared/stores/auth-store-provider";
 import { useEffect } from "react";
 import { createToastError } from "@/shared/utils/utils";
-import { useShallow } from "zustand/shallow";
-
-interface IAuthSelector {
-  authMode: AuthMode;
-  setAuthMode: (mode: AuthMode) => void;
-  isLoading: boolean;
-  error: Error | null;
-  fetchSignUp: (formData: IAuthForm) => Promise<void>;
-  fetchSignIn: (formData: IAuthForm) => Promise<void>;
-}
+import {
+  useAuthActions,
+  useAuthError,
+  useAuthMode,
+  useIsAuthLoading,
+} from "@/shared/stores/auth/hooks";
 
 export default function AuthPage() {
-  const { authMode, setAuthMode, isLoading, error, fetchSignUp, fetchSignIn } =
-    useAuthStore<IAuthSelector>(
-      useShallow((state) => ({
-        authMode: state.authMode,
-        setAuthMode: state.setAuthMode,
-        isLoading: state.isLoading,
-        error: state.error,
-        fetchSignUp: state.fetchSignUp,
-        fetchSignIn: state.fetchSignIn,
-      })),
-    );
+  const { setAuthMode, fetchSignUp, fetchSignIn } = useAuthActions();
+  const authMode = useAuthMode();
+  const isLoading = useIsAuthLoading();
+  const error = useAuthError();
 
   const {
     control,
@@ -36,7 +24,7 @@ export default function AuthPage() {
     reset,
     setError,
     formState: { errors },
-  } = useForm<IAuthForm>({
+  } = useForm<AuthForm>({
     mode: "onBlur",
     defaultValues: {
       email: "",
@@ -58,15 +46,15 @@ export default function AuthPage() {
     }
   }, [error]);
 
-  const handleSighUp = (formData: IAuthForm) => {
+  const handleSighUp = (formData: AuthForm) => {
     fetchSignUp(formData);
   };
 
-  const handleSighIn = (formData: IAuthForm) => {
+  const handleSighIn = (formData: AuthForm) => {
     fetchSignIn(formData);
   };
 
-  const onSubmit: SubmitHandler<IAuthForm> = (formData) => {
+  const onSubmit: SubmitHandler<AuthForm> = (formData) => {
     if (authMode === AuthMode.Registration) {
       handleSighUp(formData);
     }
@@ -82,7 +70,7 @@ export default function AuthPage() {
   };
 
   return (
-    <AuthForm
+    <AuthFormComponent
       authMode={authMode}
       onChangeAuthMode={handleChangeAuthMode}
       onFormSubmit={handleSubmit(onSubmit)}

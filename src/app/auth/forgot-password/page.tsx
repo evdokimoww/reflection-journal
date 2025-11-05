@@ -1,27 +1,21 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useAuthStore } from "@/shared/stores/auth-store-provider";
-import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
+import { ForgotPasswordFormComponent } from "@/components/auth/ForgotPasswordFormComponent.tsx";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { createToastError } from "@/shared/utils/utils";
-import type { IForgotPasswordForm } from "@/shared/types/auth.types";
-import { useShallow } from "zustand/shallow";
+import {
+  useAuthActions,
+  useAuthError,
+  useIsAuthLoading,
+} from "@/shared/stores/auth/hooks";
+import { ForgotPasswordForm } from "@/shared/types";
 
-interface IAuthSelector {
-  isLoading: boolean;
-  error: Error | null;
-  fetchForgotPassword: (formData: IForgotPasswordForm) => Promise<void>;
-}
 export default function ForgotPasswordPage() {
-  const { isLoading, error, fetchForgotPassword } = useAuthStore<IAuthSelector>(
-    useShallow((state) => ({
-      isLoading: state.isLoading,
-      error: state.error,
-      fetchForgotPassword: state.fetchForgotPassword,
-    })),
-  );
+  const { fetchForgotPassword } = useAuthActions();
+  const isLoading = useIsAuthLoading();
+  const error = useAuthError();
 
   const router = useRouter();
 
@@ -29,7 +23,7 @@ export default function ForgotPasswordPage() {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<IForgotPasswordForm>({
+  } = useForm<ForgotPasswordForm>({
     mode: "onBlur",
     defaultValues: {
       email: "",
@@ -42,7 +36,7 @@ export default function ForgotPasswordPage() {
     }
   }, [error]);
 
-  const onSubmit = (formData: IForgotPasswordForm) => {
+  const onSubmit = (formData: ForgotPasswordForm) => {
     fetchForgotPassword(formData);
   };
 
@@ -51,7 +45,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <ForgotPasswordForm
+    <ForgotPasswordFormComponent
       onFormSubmit={handleSubmit(onSubmit)}
       control={control}
       formErrors={errors}

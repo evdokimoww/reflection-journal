@@ -1,24 +1,22 @@
 import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
 import React from "react";
 import { Control, FieldErrors } from "react-hook-form";
-import { EmailFormField } from "@/components/auth/EmailFormField";
-import { IForgotPasswordForm } from "@/shared/types/auth.types";
+import { PasswordFormField } from "@/components/auth/PasswordFormField";
+import { UpdatePasswordForm } from "@/shared/types";
 
-interface IForgotPasswordProps {
+interface Props {
   onFormSubmit: () => void;
-  control: Control<IForgotPasswordForm>;
-  formErrors: FieldErrors<IForgotPasswordForm>;
+  control: Control<UpdatePasswordForm>;
+  formErrors: FieldErrors<UpdatePasswordForm>;
   isLoading: boolean;
-  onBackButtonClick: () => void;
 }
 
-export function ForgotPasswordForm({
+export function UpdatePasswordFormComponent({
   onFormSubmit,
   control,
   formErrors,
   isLoading,
-  onBackButtonClick,
-}: IForgotPasswordProps) {
+}: Props) {
   return (
     <Flex
       w={{ md: 80 }}
@@ -31,35 +29,20 @@ export function ForgotPasswordForm({
           Reflection Journal
         </Text>
         <Text fontSize="sm" mb="4" textAlign="center">
-          Забыли пароль?
-          <br />
-          Укажите ваш e-mail для восстановления
+          Введите новый пароль
         </Text>
         <Box w="100%">
           <Flex direction="column" align="center" w="100%" justify="center">
             <Stack gap="4" mb="6" w="100%">
-              <EmailFormField<IForgotPasswordForm>
-                name="email"
+              <PasswordFormField<IUpdatePasswordProps>
+                name="password"
                 control={control}
                 formErrors={formErrors}
                 isLoading={isLoading}
               />
             </Stack>
-            <Button
-              type="submit"
-              onClick={onFormSubmit}
-              loading={isLoading}
-              mb="4"
-            >
-              Восстановить
-            </Button>
-            <Button
-              variant="surface"
-              size="xs"
-              onClick={onBackButtonClick}
-              disabled={isLoading}
-            >
-              &#8592; Назад
+            <Button type="submit" onClick={onFormSubmit} loading={isLoading}>
+              Обновить пароль
             </Button>
           </Flex>
         </Box>

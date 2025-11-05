@@ -3,7 +3,7 @@
 import { createClient } from "@/shared/utils/supabase/server";
 import { FiltrationType } from "@/shared/data/entries-table-filters.data";
 import { endOfDay, parseISO, startOfDay } from "date-fns";
-import { IEntryRequestData } from "@/shared/types/entry.types";
+import { EntryRequestData } from "@/shared/types";
 
 export async function getEntriesRequest(
   isSortAsc: boolean,
@@ -121,7 +121,7 @@ export async function getCurrentEntryRequest(id: string) {
   return { data, error: null };
 }
 
-export async function createEntryRequest(formData: IEntryRequestData) {
+export async function createEntryRequest(formData: EntryRequestData) {
   const supabase = await createClient();
 
   const {

@@ -1,22 +1,24 @@
 import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
 import React from "react";
 import { Control, FieldErrors } from "react-hook-form";
-import { PasswordFormField } from "@/components/auth/PasswordFormField";
-import type { IUpdatePasswordForm } from "@/shared/types/auth.types";
+import { EmailFormField } from "@/components/auth/EmailFormField";
+import { ForgotPasswordForm } from "@/shared/types";
 
-interface IUpdatePasswordProps {
+interface Props {
   onFormSubmit: () => void;
-  control: Control<IUpdatePasswordForm>;
-  formErrors: FieldErrors<IUpdatePasswordForm>;
+  control: Control<ForgotPasswordForm>;
+  formErrors: FieldErrors<ForgotPasswordForm>;
   isLoading: boolean;
+  onBackButtonClick: () => void;
 }
 
-export function UpdatePasswordForm({
+export function ForgotPasswordFormComponent({
   onFormSubmit,
   control,
   formErrors,
   isLoading,
-}: IUpdatePasswordProps) {
+  onBackButtonClick,
+}: Props) {
   return (
     <Flex
       w={{ md: 80 }}
@@ -29,20 +31,35 @@ export function UpdatePasswordForm({
           Reflection Journal
         </Text>
         <Text fontSize="sm" mb="4" textAlign="center">
-          Введите новый пароль
+          Забыли пароль?
+          <br />
+          Укажите ваш e-mail для восстановления
         </Text>
         <Box w="100%">
           <Flex direction="column" align="center" w="100%" justify="center">
             <Stack gap="4" mb="6" w="100%">
-              <PasswordFormField<IUpdatePasswordProps>
-                name="password"
+              <EmailFormField<ForgotPasswordForm>
+                name="email"
                 control={control}
                 formErrors={formErrors}
                 isLoading={isLoading}
               />
             </Stack>
-            <Button type="submit" onClick={onFormSubmit} loading={isLoading}>
-              Обновить пароль
+            <Button
+              type="submit"
+              onClick={onFormSubmit}
+              loading={isLoading}
+              mb="4"
+            >
+              Восстановить
+            </Button>
+            <Button
+              variant="surface"
+              size="xs"
+              onClick={onBackButtonClick}
+              disabled={isLoading}
+            >
+              &#8592; Назад
             </Button>
           </Flex>
         </Box>

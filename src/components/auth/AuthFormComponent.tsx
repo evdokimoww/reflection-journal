@@ -1,29 +1,29 @@
 import { Box, Button, Flex, SegmentGroup, Stack, Text } from "@chakra-ui/react";
-import { AuthMode, type IAuthForm } from "@/shared/types/auth.types";
+import { AuthMode, AuthForm } from "@/shared/types";
 import React from "react";
 import { Control, FieldErrors } from "react-hook-form";
 import Link from "next/link";
-import { PAGES } from "@/shared/config/pages.config";
 import { EmailFormField } from "@/components/auth/EmailFormField";
 import { PasswordFormField } from "@/components/auth/PasswordFormField";
+import { PAGES } from "@/shared/constants.ts";
 
-interface IAuthFormProps {
+interface Props {
   authMode: AuthMode;
   onChangeAuthMode: (authMode: AuthMode) => void;
   onFormSubmit: () => void;
-  control: Control<IAuthForm>;
-  formErrors: FieldErrors<IAuthForm>;
+  control: Control<AuthForm>;
+  formErrors: FieldErrors<AuthForm>;
   isLoading: boolean;
 }
 
-export function AuthForm({
+export function AuthFormComponent({
   authMode,
   onChangeAuthMode,
   onFormSubmit,
   control,
   formErrors,
   isLoading,
-}: IAuthFormProps) {
+}: Props) {
   return (
     <Flex
       w={{ md: 80 }}
@@ -48,13 +48,13 @@ export function AuthForm({
         <Box w="100%">
           <Flex direction="column" align="center" w="100%" justify="center">
             <Stack gap="4" mb="6" w="100%">
-              <EmailFormField<IAuthForm>
+              <EmailFormField<AuthForm>
                 name="email"
                 control={control}
                 formErrors={formErrors}
                 isLoading={isLoading}
               />
-              <PasswordFormField<IAuthForm>
+              <PasswordFormField<AuthForm>
                 name="password"
                 control={control}
                 formErrors={formErrors}

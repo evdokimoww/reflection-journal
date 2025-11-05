@@ -1,7 +1,7 @@
 import { ActionBar, Button, Portal } from "@chakra-ui/react";
 import React from "react";
 
-interface IProps {
+interface Props {
   isEditForm: boolean;
   onFormClean: () => void;
   onFormRevert: () => void;
@@ -13,7 +13,7 @@ export function FormActionBar({
   onFormClean,
   onFormRevert,
   onFormSubmit,
-}: IProps) {
+}: Props) {
   return (
     <ActionBar.Root open>
       <Portal>

@@ -5,14 +5,14 @@ import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
 import NavItem from "@/components/public/NavItem";
 import { SIDEBAR_MENU_LINKS } from "@/shared/data/sidebar.data";
 import { usePathname } from "next/navigation";
-import { PAGES } from "@/shared/config/pages.config";
+import { PAGES } from "@/shared/constants.ts";
 import { SidebarBottomLink } from "@/components/public/SidebarBottomLink";
 
-interface ISidebarProps {
+interface Props {
   onSignOut: () => void;
 }
 
-export default function Sidebar({ onSignOut }: ISidebarProps) {
+export default function Sidebar({ onSignOut }: Props) {
   const pathname = usePathname();
   const originalPathname = "/" + (pathname.split("/").filter(Boolean)[0] || "");
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteCenter, Box, Button, Flex, Text } from "@chakra-ui/react";
 import Link from "next/link";
-import { PAGES } from "@/shared/config/pages.config";
+import { PAGES } from "@/shared/constants.ts";
 
 export default function DashboardPage() {
   return (

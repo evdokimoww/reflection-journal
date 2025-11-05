@@ -7,25 +7,24 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import type { IMethodology, IStep } from "@/shared/types/methodologies.types";
 import Question from "@/shared/assets/icons/question.svg";
 import Image from "next/image";
 import React, { RefObject } from "react";
 import { ToggleTip } from "@/components/ui/toggle-tip";
 import { Control, Controller, FieldErrors } from "react-hook-form";
-import { IForm } from "@/components/entry-form/EntryForm";
+import { EntryForm } from "@/components/entry-form/EntryForm";
 import { MethodologyFormDialog } from "@/components/entry-form/MethodologyFormDialog";
 import { TagsComponent } from "@/components/entry-form/TagsComponent";
-import { ITag } from "@/shared/types/entry.types";
+import { Methodology, Step, TagItem } from "@/shared/types";
 
-interface IProps {
-  methodology: IMethodology;
-  control: Control<IForm>;
-  errors: FieldErrors<IForm>;
+interface Props {
+  methodology: Methodology;
+  control: Control<EntryForm>;
+  errors: FieldErrors<EntryForm>;
   tagInputRef: RefObject<HTMLInputElement>;
   onTagsSearch: (value: string) => void;
   isTagsLoading: boolean;
-  searchedTags: ITag[];
+  searchedTags: TagItem[];
 }
 
 export function EntryFormView({
@@ -36,7 +35,7 @@ export function EntryFormView({
   onTagsSearch,
   isTagsLoading,
   searchedTags,
-}: IProps) {
+}: Props) {
   return (
     <Flex direction="column" maxW="1200px" gap="6">
       <Controller
@@ -98,7 +97,7 @@ export function EntryFormView({
           )}
         </Flex>
       )}
-      {methodology.steps.map((step: IStep, index: number) => (
+      {methodology.steps.map((step: Step, index: number) => (
         <Flex key={step.id} gap="4" width="100%" justify="space-between">
           <Flex gap="2" w="220px">
             {step?.hint && (

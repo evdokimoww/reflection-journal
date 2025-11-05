@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { Box } from "@chakra-ui/react";
-import type { ISidebarMenuItem } from "@/shared/data/sidebar.data";
+import type { SidebarMenuItem } from "@/shared/data/sidebar.data";
 
-interface NavItemProps {
-  link: ISidebarMenuItem;
+interface Props {
+  link: SidebarMenuItem;
   isActive: boolean;
 }
 
-export default function NavItem({ link, isActive }: NavItemProps) {
+export default function NavItem({ link, isActive }: Props) {
   return (
     <Link href={link.href}>
       <Box

@@ -12,15 +12,15 @@ import {
   Spinner,
   Tag,
 } from "@chakra-ui/react";
-import { ITag } from "@/shared/types/entry.types";
+import { TagItem } from "@/shared/types";
 
-interface IProps {
+interface Props {
   tags: { id?: string; value: string }[];
   onFormChange: (tags: { id?: string; value: string }[]) => void;
   tagInputRef: RefObject<HTMLInputElement>;
   onTagsSearch: (value: string) => void;
   isTagsLoading: boolean;
-  searchedTags: ITag[];
+  searchedTags: TagItem[];
 }
 
 export function TagsComponent({
@@ -30,7 +30,7 @@ export function TagsComponent({
   onTagsSearch,
   isTagsLoading,
   searchedTags,
-}: IProps) {
+}: Props) {
   const tagsValues = useMemo(() => tags.map((tag) => tag.value), [tags]);
 
   const filteredSearchedTags = useMemo(() => {
@@ -80,7 +80,7 @@ export function TagsComponent({
     onFormChange(updatedValue);
   };
 
-  const handleAddSearchedTag = (changedTag: ITag) => {
+  const handleAddSearchedTag = (changedTag: TagItem) => {
     if (tagsValues.includes(changedTag.value)) return;
 
     onFormChange([...tags, { id: changedTag.id, value: changedTag.value }]);

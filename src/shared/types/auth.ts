@@ -3,15 +3,15 @@ export enum AuthMode {
   Registration = "Регистрация",
 }
 
-export interface IAuthForm {
+export interface AuthForm {
   email: string;
   password: string;
 }
 
-export interface IForgotPasswordForm {
+export interface ForgotPasswordForm {
   email: string;
 }
 
-export interface IUpdatePasswordForm {
+export interface UpdatePasswordForm {
   password: string;
 }

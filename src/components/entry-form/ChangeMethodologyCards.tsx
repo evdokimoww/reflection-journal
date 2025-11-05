@@ -1,16 +1,16 @@
 import { Box, CheckboxGroup, Flex, HStack, RadioCard } from "@chakra-ui/react";
 import React from "react";
-import { IMethodology } from "@/shared/types/methodologies.types";
+import { Methodology } from "@/shared/types";
 
-interface IProps {
-  methodologies: IMethodology[];
+interface Props {
+  methodologies: Methodology[];
   onMethodologyChange: (id: string) => void;
 }
 
 export function ChangeMethodologyCards({
   methodologies,
   onMethodologyChange,
-}: IProps) {
+}: Props) {
   return (
     <Box mb="8">
       <CheckboxGroup maxW="800px">

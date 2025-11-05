@@ -1,10 +1,10 @@
 import React, { ChangeEvent } from "react";
 import { Flex, NativeSelect } from "@chakra-ui/react";
-import { IFilterItem } from "@/shared/types/types";
+import { FilterItem } from "@/shared/types";
 
-interface IProps {
+interface Props {
   fieldName: string;
-  items: IFilterItem[];
+  items: FilterItem[];
   onSelectChange: (e: ChangeEvent<HTMLSelectElement>) => void;
   defaultValue: string;
 }
@@ -14,7 +14,7 @@ export function EntriesTableSingleFilter({
   items,
   onSelectChange,
   defaultValue,
-}: IProps) {
+}: Props) {
   return (
     <Flex fontSize="xs" align="center" gap="2">
       {fieldName}:

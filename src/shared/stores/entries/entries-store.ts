@@ -1,8 +1,8 @@
-import { createStore } from "zustand/vanilla";
-import type {
+import {
   EntriesResponseArray,
-  IEntryListItem,
-} from "@/shared/types/entry.types";
+  EntryListItem,
+  FilterValuesResponse,
+} from "@/shared/types";
 import {
   getEntriesRequest,
   getFilterValuesRequest,
@@ -13,82 +13,49 @@ import {
   SortingDirection,
   STATE_FIELDS_BY_FILTRATION_TYPE,
 } from "@/shared/data/entries-table-filters.data";
-import { getFilterValuesResponseType } from "@/shared/types/api.types";
-import { IFilterItem } from "@/shared/types/types";
 import { subscribeWithSelector } from "zustand/middleware";
 import { DATE_TIME_FORMAT } from "@/shared/constants";
+import {
+  EntriesState,
+  EntriesStore,
+  FiltersValues,
+} from "@/shared/stores/entries/types";
+import { create } from "zustand";
 
-export type FiltersValuesType = {
-  changedMethodologyFilterValue: string;
-  changedTagFilterValue: string;
-  changedDateFilterValue: string;
-};
-
-export type EntriesStateType = {
-  entries: IEntryListItem[];
-  isLoading: boolean;
-  error: Error | null;
-  sortingDirection: SortingDirection;
-  filtrationType: FiltrationType;
-  isFilterValuesLoading: boolean;
-  filterValues: {
-    methodologies: IFilterItem[];
-    tags: IFilterItem[];
-  };
-} & FiltersValuesType;
-
-export type EntriesActionsType = {
-  fetchEntries: () => Promise<void>;
-  setSortingDirection: (value: SortingDirection) => void;
-  setFiltrationType: (value: FiltrationType) => void;
-  fetchFilterValues: () => Promise<void>;
-  setChangedMethodologyFilterValue: (value: string) => void;
-  setChangedTagFilterValue: (value: string) => void;
-  setChangedDateFilterValue: (value: string) => void;
-};
-
-export type EntriesStore = EntriesStateType & EntriesActionsType;
-
-const initialFiltersValues: FiltersValuesType = {
+const initialFiltersValues: FiltersValues = {
   changedMethodologyFilterValue: "none",
   changedTagFilterValue: "none",
   changedDateFilterValue: "",
 };
 
-export const initEntriesStore = (): EntriesStateType => {
-  return {
-    entries: [],
-    isLoading: false,
-    error: null,
-    sortingDirection: SortingDirection.Newest,
-    filtrationType: FiltrationType.None,
-    isFilterValuesLoading: false,
-    filterValues: {
-      methodologies: [
-        {
-          label: "не выбрано",
-          value: "none",
-        },
-      ],
-      tags: [
-        {
-          label: "не выбрано",
-          value: "none",
-        },
-      ],
-    },
-    ...initialFiltersValues,
-  };
+export const defaultInitState: EntriesState = {
+  entries: [],
+  isLoading: false,
+  error: null,
+  sortingDirection: SortingDirection.Newest,
+  filtrationType: FiltrationType.None,
+  isFilterValuesLoading: false,
+  filterValues: {
+    methodologies: [
+      {
+        label: "не выбрано",
+        value: "none",
+      },
+    ],
+    tags: [
+      {
+        label: "не выбрано",
+        value: "none",
+      },
+    ],
+  },
+  ...initialFiltersValues,
 };
 
-export const defaultInitState: EntriesStateType = initEntriesStore();
-
-export const createEntriesStore = (
-  initState: EntriesStateType = defaultInitState,
-) => {
-  return createStore<EntriesStore>()(
-    subscribeWithSelector((set, get) => ({
-      ...initState,
+export const useEntriesStore = create<EntriesStore>()(
+  subscribeWithSelector((set, get) => ({
+    ...defaultInitState,
+    actions: {
       setSortingDirection: (value: SortingDirection) =>
         set({ sortingDirection: value }),
       setFiltrationType: (value: FiltrationType) =>
@@ -116,14 +83,13 @@ export const createEntriesStore = (
 
           if (!!currentFiltrationField) {
             filter.type = get().filtrationType;
-            filter.value =
-              get()[currentFiltrationField as keyof FiltersValuesType];
+            filter.value = get()[currentFiltrationField as keyof FiltersValues];
           }
 
           const {
             data,
             error,
-          }: { data: EntriesResponseArray; error: Error | null } =
+          }: { data: EntriesResponseArray; error: ResponseError } =
             await getEntriesRequest(isSortingAsc, filter);
 
           if (error) {
@@ -141,7 +107,7 @@ export const createEntriesStore = (
                 tags: entry.tags.map((item) => item.tag.value),
               },
             ],
-            [] as IEntryListItem[],
+            [] as EntryListItem[],
           );
 
           set({ entries: mappedEntries });
@@ -162,7 +128,7 @@ export const createEntriesStore = (
         try {
           set({ isFilterValuesLoading: true, error: null });
 
-          const { methodologies, tags }: getFilterValuesResponseType =
+          const { methodologies, tags }: FilterValuesResponse =
             await getFilterValuesRequest();
 
           if (methodologies.error || tags.error) {
@@ -207,6 +173,6 @@ export const createEntriesStore = (
           set({ isFilterValuesLoading: false });
         }
       },
-    })),
-  );
-};
+    },
+  })),
+);

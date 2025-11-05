@@ -7,13 +7,13 @@ import {
   Portal,
   Text,
 } from "@chakra-ui/react";
-import { IMethodology } from "@/shared/types/methodologies.types";
+import { Methodology } from "@/shared/types";
 
-interface IProps {
-  methodology: IMethodology;
+interface Props {
+  methodology: Methodology;
 }
 
-export function MethodologyItemDialog({ methodology }: IProps) {
+export function MethodologyItemDialog({ methodology }: Props) {
   return (
     <Portal>
       <Dialog.Backdrop />

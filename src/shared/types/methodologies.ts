@@ -1,13 +1,13 @@
-export interface IMethodology {
+export interface Methodology {
   id: string;
   title: string;
   short_description?: string;
   description?: string;
   theory?: string;
-  steps: IStep[]; // массив шагов/вопросов
+  steps: Step[]; // массив шагов/вопросов
 }
 
-export interface IStep {
+export interface Step {
   id: string;
   question: string;
   description?: string;

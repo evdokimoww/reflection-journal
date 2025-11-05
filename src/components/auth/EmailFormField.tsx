@@ -8,7 +8,7 @@ import {
 import { Field, Input } from "@chakra-ui/react";
 import React from "react";
 
-interface IEmailFormFieldProps<T extends FieldValues> {
+interface Props<T extends FieldValues> {
   name: Path<T>;
   control: Control<T>;
   formErrors: FieldErrors<T>;
@@ -20,7 +20,7 @@ export const EmailFormField = <T extends FieldValues>({
   control,
   formErrors,
   isLoading,
-}: IEmailFormFieldProps<T>) => {
+}: Props<T>) => {
   return (
     <Controller
       name={name as Path<T>}

@@ -1,29 +1,34 @@
 "use client";
 
-import { IMethodology } from "@/shared/types/methodologies.types";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { EntryFormView } from "@/components/entry-form/EntryFormView";
 import { FormActionBar } from "@/components/entry-form/FormActionBar";
-import { IEntry, IEntryRequestData, ITag } from "@/shared/types/entry.types";
+import {
+  EntryItem,
+  EntryRequestData,
+  EntryStep,
+  Methodology,
+  TagItem,
+} from "@/shared/types";
 import { deepEqualFormValues } from "@/shared/utils/utils";
 import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-export interface IForm {
+export interface EntryForm {
   title: string;
-  tags: { id: string; value: string }[];
-  steps: { id: string; value: string }[];
+  tags: TagItem[];
+  steps: Omit<EntryStep, "step_id">[];
 }
 
-interface IProps {
-  entry?: IEntry | null;
-  methodology: IMethodology | null;
+interface Props {
+  entry?: EntryItem | null;
+  methodology: Methodology | null;
   isEditForm?: boolean;
   isTagsLoading: boolean;
-  searchedTags: ITag[];
+  searchedTags: TagItem[];
   onTagsSearch: (searchString: string) => void;
-  saveEntry: (data: IEntryRequestData, router?: AppRouterInstance) => void;
+  saveEntry: (data: EntryRequestData, router?: AppRouterInstance) => void;
 }
 
 export function EntryForm({
@@ -34,9 +39,9 @@ export function EntryForm({
   searchedTags,
   onTagsSearch,
   saveEntry,
-}: IProps) {
+}: Props) {
   const router = useRouter();
-  const [defaultValues, setDefaultValues] = useState<IForm>({
+  const [defaultValues, setDefaultValues] = useState<EntryForm>({
     title: "",
     tags: [],
     steps: [],
@@ -78,7 +83,7 @@ export function EntryForm({
     reset,
     formState: { errors },
     watch,
-  } = useForm<IForm>({
+  } = useForm<EntryForm>({
     mode: "onBlur",
     defaultValues,
   });
@@ -97,7 +102,7 @@ export function EntryForm({
     return !deepEqualFormValues(currentFormValues, defaultValues);
   }, [currentFormValues]);
 
-  const handleFormSubmit: SubmitHandler<IForm> = (data) => {
+  const handleFormSubmit: SubmitHandler<EntryForm> = (data) => {
     if (methodology) {
       saveEntry({ ...data, methodologyId: methodology.id }, router);
     }

@@ -7,9 +7,9 @@ import {
   TABLE_SORT_ITEMS,
 } from "@/shared/data/entries-table-filters.data";
 import { EntriesTableSingleFilter } from "@/components/entries/EntriesTableSingleFilter";
-import { IFilterItem } from "@/shared/types/types";
+import { FilterItem } from "@/shared/types";
 
-interface IProps {
+interface Props {
   sortingDirection: SortingDirection;
   filtrationType: FiltrationType;
   onSortingChange: (e: ChangeEvent<HTMLSelectElement>) => void;
@@ -18,8 +18,8 @@ interface IProps {
   onTagsChange: (e: ChangeEvent<HTMLSelectElement>) => void;
   onDateChange: (e: ChangeEvent<HTMLInputElement>) => void;
   filterValues: {
-    methodologies: IFilterItem[];
-    tags: IFilterItem[];
+    methodologies: FilterItem[];
+    tags: FilterItem[];
   };
   changedMethodologyFilterValue: string;
   changedTagFilterValue: string;
@@ -36,7 +36,7 @@ export function EntriesTableFilters({
   filterValues,
   changedMethodologyFilterValue,
   changedTagFilterValue,
-}: IProps) {
+}: Props) {
   return (
     <Flex gap="8" mb="4">
       <EntriesTableSingleFilter

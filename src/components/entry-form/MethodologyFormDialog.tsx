@@ -1,12 +1,12 @@
 import { Button, CloseButton, Dialog, Portal } from "@chakra-ui/react";
 import React from "react";
 
-interface IProps {
+interface Props {
   title: string;
   text: string;
 }
 
-export function MethodologyFormDialog({ title, text }: IProps) {
+export function MethodologyFormDialog({ title, text }: Props) {
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>

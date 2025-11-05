@@ -1,63 +1,40 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { IMethodology } from "@/shared/types/methodologies.types";
-import { useMethodologiesStore } from "@/shared/stores/methodologies-store-provider";
-import { useShallow } from "zustand/shallow";
 import { Loader } from "@/components/public/Loader";
 import { createToastError } from "@/shared/utils/utils";
 import { EntryForm } from "@/components/entry-form/EntryForm";
-import { useTagsStore } from "@/shared/stores/tags-store-provider";
-import { IEntryRequestData, ITag } from "@/shared/types/entry.types";
 import { ChangeMethodologyCards } from "@/components/entry-form/ChangeMethodologyCards";
-import { useEntryStore } from "@/shared/stores/entry-store-provider";
-
-interface IMethodologiesSelector {
-  methodologies: IMethodology[];
-  isLoading: boolean;
-  methodologiesError: Error | null;
-  fetchMethodologies: () => Promise<void>;
-}
-
-interface ITagsSelector {
-  tagsError: Error | null;
-  isTagsLoading: boolean;
-  searchedTags: ITag[];
-  fetchSearchedTags: (searchString: string) => Promise<void>;
-}
-
-interface IEntrySelector {
-  isEntryLoading: boolean;
-  createEntry: (data: IEntryRequestData) => void;
-}
+import {
+  useEntryActions,
+  useIsEntryLoading,
+} from "@/shared/stores/entry/hooks";
+import {
+  useIsMethodologiesLoading,
+  useMethodologies,
+  useMethodologiesActions,
+  useMethodologiesError,
+} from "@/shared/stores/methodologies/hooks";
+import {
+  useIsTagsLoading,
+  useSearchedTags,
+  useTagsActions,
+  useTagsError,
+} from "@/shared/stores/tags/hooks";
 
 export function EntryCreateComponent() {
-  const { methodologies, methodologiesError, isLoading, fetchMethodologies } =
-    useMethodologiesStore<IMethodologiesSelector>(
-      useShallow((state) => ({
-        methodologies: state.methodologies,
-        isLoading: state.isLoading,
-        methodologiesError: state.error,
-        fetchMethodologies: state.fetchMethodologies,
-      })),
-    );
+  const { createEntry } = useEntryActions();
+  const isEntryLoading = useIsEntryLoading();
 
-  const { tagsError, isTagsLoading, searchedTags, fetchSearchedTags } =
-    useTagsStore<ITagsSelector>(
-      useShallow((state) => ({
-        tagsError: state.error,
-        isTagsLoading: state.isTagsLoading,
-        searchedTags: state.searchedTags,
-        fetchSearchedTags: state.fetchSearchedTags,
-      })),
-    );
+  const { fetchMethodologies } = useMethodologiesActions();
+  const methodologies = useMethodologies();
+  const methodologiesError = useMethodologiesError();
+  const isMethodologiesLoading = useIsMethodologiesLoading();
 
-  const { createEntry, isEntryLoading } = useEntryStore<IEntrySelector>(
-    useShallow((state) => ({
-      isEntryLoading: state.isLoading,
-      createEntry: state.createEntry,
-    })),
-  );
+  const { fetchSearchedTags } = useTagsActions();
+  const tagsError = useTagsError();
+  const isTagsLoading = useIsTagsLoading();
+  const searchedTags = useSearchedTags();
 
   useEffect(() => {
     fetchMethodologies();
@@ -78,7 +55,7 @@ export function EntryCreateComponent() {
     setChangedMethodologyId(id);
   };
 
-  return isLoading || isEntryLoading ? (
+  return isMethodologiesLoading || isEntryLoading ? (
     <Loader />
   ) : (
     <>

@@ -1,13 +1,13 @@
 import { Table, Text } from "@chakra-ui/react";
 import React from "react";
-import { IEntryListItem } from "@/shared/types/entry.types";
+import { EntryListItem } from "@/shared/types";
 
-interface IProps {
-  entries: IEntryListItem[];
+interface Props {
+  entries: EntryListItem[];
   onRowDoubleClick: (id: string) => void;
 }
 
-export function EntriesTable({ entries, onRowDoubleClick }: IProps) {
+export function EntriesTable({ entries, onRowDoubleClick }: Props) {
   return (
     <Table.Root size="sm" striped interactive>
       <Table.Header>

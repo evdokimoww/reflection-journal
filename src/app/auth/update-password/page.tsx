@@ -1,33 +1,26 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useAuthStore } from "@/shared/stores/auth-store-provider";
-import { UpdatePasswordForm } from "@/components/auth/UpdatePasswordForm";
-import type { IUpdatePasswordForm } from "@/shared/types/auth.types";
+import { UpdatePasswordFormComponent } from "@/components/auth/UpdatePasswordFormComponent.tsx";
+import { UpdatePasswordForm } from "@/shared/types";
 import { useEffect } from "react";
 import { createToastError } from "@/shared/utils/utils";
-import { useShallow } from "zustand/shallow";
-
-interface IAuthSelector {
-  isLoading: boolean;
-  error: Error | null;
-  fetchUpdatePassword: (formData: IUpdatePasswordForm) => Promise<void>;
-}
+import {
+  useAuthActions,
+  useAuthError,
+  useIsAuthLoading,
+} from "@/shared/stores/auth/hooks";
 
 export default function UpdatePasswordPage() {
-  const { isLoading, error, fetchUpdatePassword } = useAuthStore<IAuthSelector>(
-    useShallow((state) => ({
-      isLoading: state.isLoading,
-      error: state.error,
-      fetchUpdatePassword: state.fetchUpdatePassword,
-    })),
-  );
+  const { fetchUpdatePassword } = useAuthActions();
+  const isLoading = useIsAuthLoading();
+  const error = useAuthError();
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<IUpdatePasswordForm>({
+  } = useForm<UpdatePasswordForm>({
     mode: "onBlur",
     defaultValues: {
       password: "",
@@ -40,12 +33,12 @@ export default function UpdatePasswordPage() {
     }
   }, [error]);
 
-  const onSubmit = (formData: IUpdatePasswordForm) => {
+  const onSubmit = (formData: UpdatePasswordForm) => {
     fetchUpdatePassword(formData);
   };
 
   return (
-    <UpdatePasswordForm
+    <UpdatePasswordFormComponent
       onFormSubmit={handleSubmit(onSubmit)}
       control={control}
       formErrors={errors}

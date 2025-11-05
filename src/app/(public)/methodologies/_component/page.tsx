@@ -1,31 +1,22 @@
 "use client";
 
 import { useEffect } from "react";
-import { useMethodologiesStore } from "@/shared/stores/methodologies-store-provider";
 import { createToastError } from "@/shared/utils/utils";
 import { Avatar, Button, Card, Dialog, Flex } from "@chakra-ui/react";
 import { MethodologyItemDialog } from "@/components/methodologies/MethodologyItemDialog";
 import { Loader } from "@/components/public/Loader";
-import { useShallow } from "zustand/shallow";
-import type { IMethodology } from "@/shared/types/methodologies.types";
-
-interface IMethodologiesSelector {
-  methodologies: IMethodology[];
-  isLoading: boolean;
-  error: Error | null;
-  fetchMethodologies: () => Promise<void>;
-}
+import {
+  useIsMethodologiesLoading,
+  useMethodologies,
+  useMethodologiesActions,
+  useMethodologiesError,
+} from "@/shared/stores/methodologies/hooks";
 
 export function MethodologiesComponent() {
-  const { methodologies, error, isLoading, fetchMethodologies } =
-    useMethodologiesStore<IMethodologiesSelector>(
-      useShallow((state) => ({
-        methodologies: state.methodologies,
-        isLoading: state.isLoading,
-        error: state.error,
-        fetchMethodologies: state.fetchMethodologies,
-      })),
-    );
+  const { fetchMethodologies } = useMethodologiesActions();
+  const methodologies = useMethodologies();
+  const error = useMethodologiesError();
+  const isLoading = useIsMethodologiesLoading();
 
   useEffect(() => {
     fetchMethodologies();

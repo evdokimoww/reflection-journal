@@ -9,7 +9,7 @@ import { Field } from "@chakra-ui/react";
 import React from "react";
 import { PasswordInput } from "@/components/ui/password-input";
 
-interface IPasswordFormFieldProps<T extends FieldValues> {
+interface Props<T extends FieldValues> {
   name: Path<T>;
   control: Control<T>;
   formErrors: FieldErrors<T>;
@@ -21,7 +21,7 @@ export const PasswordFormField = <T extends FieldValues>({
   control,
   formErrors,
   isLoading,
-}: IPasswordFormFieldProps<T>) => {
+}: Props<T>) => {
   return (
     <Controller
       name={name as Path<T>}

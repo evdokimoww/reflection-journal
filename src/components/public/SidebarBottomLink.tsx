@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 
-interface IBottomLinkProps {
+interface Props {
   isActive?: boolean;
   onClick?: () => void;
   children: React.ReactNode;
@@ -10,7 +10,7 @@ export function SidebarBottomLink({
   isActive = false,
   onClick,
   children,
-}: IBottomLinkProps) {
+}: Props) {
   return (
     <Box
       fontSize="14px"

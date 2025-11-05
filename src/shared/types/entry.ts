@@ -1,19 +1,16 @@
-interface IStep {
+import { TagItem } from "@/shared/types";
+
+export interface EntryStep {
   id: string;
   value: string;
   step_id: string;
 }
 
-export interface ITag {
-  id: string;
-  value: string;
-}
-
 interface EntryResponseTag {
-  tag: ITag;
+  tag: TagItem;
 }
 
-interface IEntriesResponseItem {
+interface EntriesResponseItem {
   id: string;
   created_at: string;
   title: string;
@@ -25,9 +22,9 @@ interface IEntriesResponseItem {
   }[];
 }
 
-export type EntriesResponseArray = IEntriesResponseItem[];
+export type EntriesResponseArray = EntriesResponseItem[];
 
-export interface IEntryListItem {
+export interface EntryListItem {
   id: string;
   created_at: string;
   title: string;
@@ -35,27 +32,27 @@ export interface IEntryListItem {
   tags: string[];
 }
 
-export interface IEntry {
+export interface EntryItem {
   id: string;
   title: string;
-  tags: ITag[];
+  tags: TagItem[];
   steps: {
     [key: string]: string;
   };
 }
 
-export interface IEntryResponseItem {
+export interface EntryResponseItem {
   id: string;
   title: string;
   methodology: { id: string };
   tags: EntryResponseTag[];
-  steps: IStep[];
+  steps: EntryStep[];
 }
 
-export interface IEntryRequestData {
+export interface EntryRequestData {
   id?: string;
   title: string;
   methodologyId: string;
-  tags: { id?: string; value: string }[];
-  steps: { id: string; value: string }[];
+  tags: Partial<TagItem>[];
+  steps: Omit<EntryStep, "step_id">[];
 }
