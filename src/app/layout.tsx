@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
 import "./globals.css";
+import { Geist } from "next/font/google";
 import React from "react";
 import Provider from "../components/ui/provider";
 import { Toaster } from "@/components/ui/toaster";

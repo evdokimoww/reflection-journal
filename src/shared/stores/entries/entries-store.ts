@@ -2,6 +2,7 @@ import {
   EntriesResponseArray,
   EntryListItem,
   FilterValuesResponse,
+  ResponseError,
 } from "@/shared/types";
 import {
   getEntriesRequest,

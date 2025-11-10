@@ -2,9 +2,13 @@ import { Button, Dialog, Portal } from "@chakra-ui/react";
 
 interface Props {
   removeEntry: () => void;
+  isRemoveEntryLoading: boolean;
 }
 
-export const RemoveEntryDialog = ({ removeEntry }: Props) => {
+export const RemoveEntryDialog = ({
+  removeEntry,
+  isRemoveEntryLoading,
+}: Props) => {
   return (
     <Portal>
       <Dialog.Backdrop />
@@ -15,9 +19,16 @@ export const RemoveEntryDialog = ({ removeEntry }: Props) => {
           </Dialog.Header>
           <Dialog.Footer>
             <Dialog.ActionTrigger asChild>
-              <Button variant="outline">Отмена</Button>
+              <Button variant="outline" disabled={isRemoveEntryLoading}>
+                Отмена
+              </Button>
             </Dialog.ActionTrigger>
-            <Button colorPalette="red" onClick={removeEntry}>
+            <Button
+              colorPalette="red"
+              onClick={removeEntry}
+              disabled={isRemoveEntryLoading}
+              loading={isRemoveEntryLoading}
+            >
               Удалить
             </Button>
           </Dialog.Footer>

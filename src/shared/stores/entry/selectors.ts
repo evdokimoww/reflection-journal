@@ -11,3 +11,6 @@ export const entryErrorSelector = (state: EntryStore) =>
 
 export const currentMethodologySelector = (state: EntryStore) =>
   state.currentMethodology;
+
+export const isRemoveEntryLoadingSelector = (state: EntryStore) =>
+  state.isRemoveLoading;

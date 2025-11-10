@@ -4,16 +4,13 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { EntryFormView } from "@/components/entry-form/EntryFormView";
 import { FormActionBar } from "@/components/entry-form/FormActionBar";
-import {
-  EntryItem,
-  EntryRequestData,
-  EntryStep,
-  Methodology,
-  TagItem,
-} from "@/shared/types";
-import { deepEqualFormValues } from "@/shared/utils/utils";
+import { EntryItem, EntryStep, Methodology, TagItem } from "@/shared/types";
+import { createToastSuccess, deepEqualFormValues } from "@/shared/utils/utils";
 import { useRouter } from "next/navigation";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import {
+  CreateEntryActionType,
+  UpdateEntryActionType,
+} from "@/shared/stores/entry/types.ts";
 
 export interface EntryForm {
   title: string;
@@ -28,7 +25,8 @@ interface Props {
   isTagsLoading: boolean;
   searchedTags: TagItem[];
   onTagsSearch: (searchString: string) => void;
-  saveEntry: (data: EntryRequestData, router?: AppRouterInstance) => void;
+  createEntry?: CreateEntryActionType;
+  updateEntry?: UpdateEntryActionType;
 }
 
 export function EntryForm({
@@ -38,7 +36,8 @@ export function EntryForm({
   isTagsLoading,
   searchedTags,
   onTagsSearch,
-  saveEntry,
+  createEntry,
+  updateEntry,
 }: Props) {
   const router = useRouter();
   const [defaultValues, setDefaultValues] = useState<EntryForm>({
@@ -69,7 +68,8 @@ export function EntryForm({
       updatedDefaultValues.title = entry.title;
       updatedDefaultValues.tags = [...entry.tags];
       updatedDefaultValues.steps.map((step) => {
-        step.value = entry.steps[step.id] || "";
+        step.value =
+          entry.steps.find((s) => s.step_id === step.id)?.value || "";
       });
     }
 
@@ -99,12 +99,23 @@ export function EntryForm({
   }, []);
 
   const isFormDirty = useMemo(() => {
-    return !deepEqualFormValues(currentFormValues, defaultValues);
+    return !deepEqualFormValues<EntryForm>(currentFormValues, defaultValues);
   }, [currentFormValues]);
 
   const handleFormSubmit: SubmitHandler<EntryForm> = (data) => {
     if (methodology) {
-      saveEntry({ ...data, methodologyId: methodology.id }, router);
+      const requestData = {
+        ...data,
+        methodologyId: methodology.id,
+      };
+
+      entry && updateEntry
+        ? updateEntry(
+            { id: entry.id, ...requestData },
+            router,
+            createToastSuccess,
+          )
+        : createEntry && createEntry(requestData, router);
     }
   };
 

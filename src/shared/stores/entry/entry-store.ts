@@ -1,12 +1,15 @@
 import {
-  EntryRequestData,
+  CreateEntryRequestData,
   EntryResponseItem,
   Methodology,
   ResponseType,
+  UpdateEntryRequestData,
 } from "@/shared/types";
 import {
   createEntryRequest,
   getCurrentEntryRequest,
+  removeEntryRequest,
+  updateEntryRequest,
 } from "@/shared/api/entries";
 import { getMethodologyRequest } from "@/shared/api/methodologies";
 import { PAGES } from "@/shared/constants.ts";
@@ -17,6 +20,7 @@ export const defaultInitState: EntryState = {
   entry: null,
   currentMethodology: null,
   isLoading: false,
+  isRemoveLoading: false,
   entryError: null,
   methodologyError: null,
   createEntryError: null,
@@ -47,10 +51,7 @@ export const useEntryStore = create<EntryStore>((set, get) => ({
               id: tag.tag.id,
               value: tag.tag.value,
             })),
-            steps: data.steps.reduce(
-              (acc, step) => ({ ...acc, [step.step_id]: step.value }),
-              {},
-            ),
+            steps: data.steps,
           },
         });
       } catch (e) {
@@ -75,7 +76,7 @@ export const useEntryStore = create<EntryStore>((set, get) => ({
         set({ isLoading: false });
       }
     },
-    createEntry: async (entryData: EntryRequestData, router) => {
+    createEntry: async (entryData: CreateEntryRequestData, router) => {
       try {
         set({ isLoading: true, createEntryError: null });
 
@@ -84,21 +85,53 @@ export const useEntryStore = create<EntryStore>((set, get) => ({
 
         if (error) throw error;
 
-        router?.push(PAGES.ENTRY(data));
+        router.push(PAGES.ENTRY(data));
       } catch (e) {
         set({ createEntryError: e as Error });
       } finally {
         set({ isLoading: false });
       }
     },
-    removeEntry: async (entryId, router) => {
+    removeEntry: async (entryId, router, showSuccessMessage) => {
       try {
-        set({ isLoading: true, removeEntryError: null });
-        console.log("я тут");
+        set({ isRemoveLoading: true, removeEntryError: null });
+
+        const { error }: ResponseType<boolean> =
+          await removeEntryRequest(entryId);
+
+        if (error) throw error;
+
+        showSuccessMessage("Запись удалена");
+        router.push(PAGES.ENTRIES);
       } catch (e) {
         set({ removeEntryError: e as Error });
       } finally {
-        set({ isLoading: false });
+        set({ isRemoveLoading: false });
+      }
+    },
+    updateEntry: async (
+      entryData: UpdateEntryRequestData,
+      router,
+      showSuccessMessage,
+    ) => {
+      try {
+        set({ isRemoveLoading: true, removeEntryError: null });
+
+        const currentEntry = get().entry;
+
+        if (currentEntry) {
+          const { data, error }: ResponseType<string> =
+            await updateEntryRequest(entryData, currentEntry.steps);
+
+          if (error) throw error;
+
+          showSuccessMessage(`Запись "${data}" обновлена`);
+          router.push(PAGES.ENTRIES);
+        }
+      } catch (e) {
+        set({ removeEntryError: e as Error });
+      } finally {
+        set({ isRemoveLoading: false });
       }
     },
     resetState: () => set(defaultInitState),

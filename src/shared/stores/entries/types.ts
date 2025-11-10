@@ -1,4 +1,4 @@
-import { EntryListItem, FilterItem } from "@/shared/types";
+import { EntryListItem, FilterItem, ResponseError } from "@/shared/types";
 import {
   FiltrationType,
   SortingDirection,

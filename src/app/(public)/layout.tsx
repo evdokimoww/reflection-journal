@@ -11,15 +11,26 @@ import {
   useAuthError,
   useIsAuthLoading,
 } from "@/shared/stores/auth/hooks";
+import {
+  useEntryActions,
+  useIsRemoveEntryLoading,
+} from "@/shared/stores/entry/hooks.ts";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function PublicLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const router = useRouter();
+
   const { fetchSignOut } = useAuthActions();
   const error = useAuthError();
   const isLoading = useIsAuthLoading();
+
+  const { removeEntry } = useEntryActions();
+  const isRemoveEntryLoading = useIsRemoveEntryLoading();
 
   useEffect(() => {
     if (error) {
@@ -37,7 +48,12 @@ export default function PublicLayout({
       <Flex minH="100vh" w="100%">
         <Sidebar onSignOut={handleSignOut} />
         <Box minH="100vh" w="100%" position="relative">
-          <ContentHeader removeEntry={() => {}} />
+          <ContentHeader
+            removeEntry={removeEntry}
+            isRemoveEntryLoading={isRemoveEntryLoading}
+            pathname={pathname}
+            router={router}
+          />
           <Box p="8" h="calc(100vh - 80px)" overflowY="auto">
             {children}
           </Box>

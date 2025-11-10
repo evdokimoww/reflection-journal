@@ -3,7 +3,11 @@
 import { createClient } from "@/shared/utils/supabase/server";
 import { FiltrationType } from "@/shared/data/entries-table-filters.data";
 import { endOfDay, parseISO, startOfDay } from "date-fns";
-import { EntryRequestData } from "@/shared/types";
+import {
+  CreateEntryRequestData,
+  EntryStep,
+  UpdateEntryRequestData,
+} from "@/shared/types";
 
 export async function getEntriesRequest(
   isSortAsc: boolean,
@@ -121,68 +125,223 @@ export async function getCurrentEntryRequest(id: string) {
   return { data, error: null };
 }
 
-export async function createEntryRequest(formData: EntryRequestData) {
+export async function createEntryRequest(formData: CreateEntryRequestData) {
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (user) {
-    // 1. Создание основной записи
-    const { data: entry, error: entryError } = await supabase
-      .from("entries")
-      .insert([
-        {
-          user_id: user.id,
-          title: formData.title,
-          methodology_id: formData.methodologyId,
-        },
-      ])
-      .select("id");
+  if (!user)
+    return { data: null, error: new Error("Пользователь не авторизован") };
 
-    if (entryError) return { data: null, error: entryError };
-    const entryId = entry[0].id;
+  // 1. Создание основной записи
+  const { data: entry, error: entryError } = await supabase
+    .from("entries")
+    .insert([
+      {
+        user_id: user.id,
+        title: formData.title,
+        methodology_id: formData.methodologyId,
+      },
+    ])
+    .select("id");
 
-    // 2. Привязка тегов
-    for (const tag of formData.tags) {
-      let tagId = tag.id;
+  if (entryError) return { data: null, error: entryError };
+  const entryId = entry[0].id;
 
-      // Если id нет, создаём тег
-      if (!tagId) {
-        const { data: newTag, error: newTagError } = await supabase
-          .from("tags")
-          .insert([{ value: tag.value }])
-          .select("id");
+  // 2. Привязка тегов
+  for (const tag of formData.tags) {
+    let tagId = tag.id;
 
-        if (newTagError) return { data: null, error: newTagError };
-        tagId = newTag[0].id;
-      }
+    // Если id нет, создаём тег
+    if (!tagId) {
+      const { data: newTag, error: newTagError } = await supabase
+        .from("tags")
+        .insert([{ value: tag.value }])
+        .select("id");
 
-      // Вставляем связь тега с записью
-      const { error: entriesTagError } = await supabase
-        .from("entries_tags")
-        .insert([{ entry_id: entryId, tag_id: tagId, user_id: user.id }]);
-
-      if (entriesTagError) return { data: null, error: entriesTagError };
+      if (newTagError) return { data: null, error: newTagError };
+      tagId = newTag[0].id;
     }
 
-    // 3. Добавление шагов
-    const stepsData = formData.steps.map((step) => ({
-      entry_id: entryId,
-      value: step.value,
-      step_id: step.id,
-      user_id: user.id,
-    }));
+    // Вставляем связь тега с записью
+    const { error: entriesTagError } = await supabase
+      .from("entries_tags")
+      .insert([{ entry_id: entryId, tag_id: tagId, user_id: user.id }]);
 
-    const { error: entryStepsError } = await supabase
-      .from("entries_steps")
-      .insert(stepsData);
-
-    if (entryStepsError) return { data: null, error: entryStepsError };
-
-    return { data: entryId, error: entryError };
+    if (entriesTagError) return { data: null, error: entriesTagError };
   }
 
-  return { data: null, error: new Error("Пользователь не авторизован") };
+  // 3. Добавление шагов
+  const stepsData = formData.steps.map((step) => ({
+    entry_id: entryId,
+    value: step.value,
+    step_id: step.id,
+    user_id: user.id,
+  }));
+
+  const { error: entryStepsError } = await supabase
+    .from("entries_steps")
+    .insert(stepsData);
+
+  if (entryStepsError) return { data: null, error: entryStepsError };
+
+  return { data: entryId, error: entryError };
+}
+
+export async function removeEntryRequest(entryId: string) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user)
+    return { data: null, error: new Error("Пользователь не авторизован") };
+
+  // 1. Удалить связи запись-теги
+  const { error: tagsError } = await supabase
+    .from("entries_tags")
+    .delete()
+    .eq("entry_id", entryId)
+    .eq("user_id", user.id);
+
+  if (tagsError) return { data: null, error: tagsError };
+
+  // 2. Удалить шаги записи
+  const { error: stepsError } = await supabase
+    .from("entries_steps")
+    .delete()
+    .eq("entry_id", entryId)
+    .eq("user_id", user.id);
+
+  if (stepsError) return { data: null, error: stepsError };
+
+  // 3. Удалить саму запись
+  const { error: entryError } = await supabase
+    .from("entries")
+    .delete()
+    .eq("id", entryId)
+    .eq("user_id", user.id);
+
+  if (entryError) return { data: null, error: entryError };
+
+  return { data: true, error: null };
+}
+
+export async function updateEntryRequest(
+  formData: UpdateEntryRequestData,
+  currentSteps: EntryStep[],
+) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user)
+    return { data: null, error: new Error("Пользователь не авторизован") };
+
+  // 1. Обновление основной записи
+  const { error: entryError } = await supabase
+    .from("entries")
+    .update({
+      title: formData.title,
+    })
+    .eq("id", formData.id);
+  if (entryError) return { data: null, error: entryError };
+
+  // 2. Получаем текущие связи тегов
+  const { data: currentTags, error: currentTagsError } = await supabase
+    .from("entries_tags")
+    .select("tag_id")
+    .eq("entry_id", formData.id)
+    .eq("user_id", user.id);
+
+  if (currentTagsError) return { data: null, error: currentTagsError };
+  const currentTagIds = currentTags.map((t: any) => t.tag_id);
+
+  // 3. Формируем новые id тегов (создавая новые, если требуется)
+  const newTagIds: string[] = [];
+  for (const tag of formData.tags) {
+    let tagId = tag.id || "";
+
+    if (!tagId) {
+      const { data: newTag, error: newTagError } = await supabase
+        .from("tags")
+        .insert([{ value: tag.value }])
+        .select("id");
+
+      if (newTagError) return { data: null, error: newTagError };
+      tagId = newTag[0].id;
+    }
+
+    newTagIds.push(tagId);
+
+    if (!currentTagIds.includes(tagId)) {
+      const { error: entriesTagError } = await supabase
+        .from("entries_tags")
+        .insert([{ entry_id: formData.id, tag_id: tagId, user_id: user.id }]);
+      if (entriesTagError) return { data: null, error: entriesTagError };
+    }
+  }
+
+  // 4. Удаление тегов, которых нет в новом списке
+  for (const oldTagId of currentTagIds) {
+    if (!newTagIds.includes(oldTagId)) {
+      const { error: deleteTagError } = await supabase
+        .from("entries_tags")
+        .delete()
+        .eq("entry_id", formData.id)
+        .eq("tag_id", oldTagId)
+        .eq("user_id", user.id);
+      if (deleteTagError) return { data: null, error: deleteTagError };
+    }
+  }
+
+  // 5. Обновляем значения шагов entries_steps
+  const newSteps: {
+    entry_id: string;
+    value: string;
+    step_id: string;
+    user_id: string;
+  }[] = [];
+
+  for (const step of formData.steps) {
+    // проверяем существует ли связный тег с данной записью
+    const stepId: string | undefined = currentSteps.find(
+      (s) => s.step_id === step.id,
+    )?.id;
+
+    if (stepId) {
+      const { error } = await supabase
+        .from("entries_steps")
+        .update({
+          value: step.value, // строка, может быть пустой
+        })
+        .eq("id", stepId)
+        .eq("entry_id", formData.id);
+
+      if (error) return { data: null, error };
+    } else {
+      newSteps.push({
+        entry_id: formData.id,
+        value: step.value,
+        step_id: step.id,
+        user_id: user.id,
+      });
+    }
+  }
+
+  // если есть новые теги для связки с записью то создаем их
+  if (newSteps.length) {
+    const { error: entryStepsError } = await supabase
+      .from("entries_steps")
+      .insert(newSteps);
+
+    if (entryStepsError) return { data: null, error: entryStepsError };
+  }
+
+  return { data: formData.title, error: null };
 }

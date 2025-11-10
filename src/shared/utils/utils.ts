@@ -15,6 +15,17 @@ export const createToastError = (error: string | Error) => {
     toaster.create({
       title: errorMessage,
       type: "error",
+      duration: 6000,
+    });
+  }, 0);
+};
+
+export const createToastSuccess = (message: string) => {
+  setTimeout(() => {
+    toaster.create({
+      title: message,
+      type: "success",
+      duration: 6000,
     });
   }, 0);
 };
@@ -34,8 +45,7 @@ function sortArray(arr: any[]): any[] {
 }
 
 // Глубокое сравнение двух значений, игнорируя порядок в массивах
-// TODO any
-export function deepEqualFormValues(a: any, b: any): boolean {
+export function deepEqualFormValues<T>(a: T, b: T): boolean {
   if (a === b) return true;
   if (typeof a !== typeof b) return false;
 
@@ -49,10 +59,15 @@ export function deepEqualFormValues(a: any, b: any): boolean {
   }
 
   if (typeof a === "object" && a !== null && b !== null) {
-    const keysA = Object.keys(a);
-    const keysB = Object.keys(b);
+    const keysA = Object.keys(a as object);
+    const keysB = Object.keys(b as object);
     if (keysA.length !== keysB.length) return false;
-    return keysA.every((key) => deepEqualFormValues(a[key], b[key]));
+    return keysA.every((key) =>
+      deepEqualFormValues(
+        (a as Record<string, unknown>)[key],
+        (b as Record<string, unknown>)[key],
+      ),
+    );
   }
 
   return false;

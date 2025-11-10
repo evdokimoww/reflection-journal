@@ -36,9 +36,7 @@ export interface EntryItem {
   id: string;
   title: string;
   tags: TagItem[];
-  steps: {
-    [key: string]: string;
-  };
+  steps: EntryStep[];
 }
 
 export interface EntryResponseItem {
@@ -49,10 +47,15 @@ export interface EntryResponseItem {
   steps: EntryStep[];
 }
 
-export interface EntryRequestData {
-  id?: string;
+export interface CreateEntryRequestData {
   title: string;
   methodologyId: string;
   tags: Partial<TagItem>[];
   steps: Omit<EntryStep, "step_id">[];
 }
+
+export interface UpdateEntryRequestData extends CreateEntryRequestData {
+  id: string;
+}
+
+export type EntryRequestData = CreateEntryRequestData | UpdateEntryRequestData;

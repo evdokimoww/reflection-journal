@@ -1,4 +1,4 @@
-import type { Methodology } from "@/shared/types";
+import type { Methodology, ResponseError } from "@/shared/types";
 
 export interface MethodologiesState {
   methodologies: Methodology[];

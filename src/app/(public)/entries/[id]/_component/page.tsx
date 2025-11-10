@@ -22,7 +22,7 @@ import {
 export function EntryPageComponent() {
   const { id }: { id: string } = useParams();
 
-  const { fetchEntry, resetState } = useEntryActions();
+  const { fetchEntry, resetState, updateEntry } = useEntryActions();
   const isLoading = useIsEntryLoading();
   const entry = useEntry();
   const entryError = useEntryError();
@@ -60,7 +60,7 @@ export function EntryPageComponent() {
       searchedTags={searchedTags}
       onTagsSearch={fetchSearchedTags}
       isEditForm
-      saveEntry={() => {}} // TODO
+      updateEntry={updateEntry}
     />
   );
 }

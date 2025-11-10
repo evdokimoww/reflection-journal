@@ -1,13 +1,11 @@
-"use client";
-
 import { Breadcrumb, Button, Dialog, Flex } from "@chakra-ui/react";
-import { usePathname, useRouter } from "next/navigation";
 import { BREADCRUMPS_PAGE_NAMES } from "@/shared/data/breadcrumbs.data";
 import React, { Fragment } from "react";
 import { PAGES } from "@/shared/constants.ts";
 import Link from "next/link";
 import { RemoveEntryDialog } from "@/components/public/RemoveEntryDialog";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { createToastSuccess } from "@/shared/utils/utils.ts";
 
 interface Path {
   link?: string;
@@ -15,13 +13,22 @@ interface Path {
 }
 
 interface Props {
-  removeEntry: (id: string, router: AppRouterInstance) => void;
+  removeEntry: (
+    id: string,
+    router: AppRouterInstance,
+    showSuccessMessage: (message: string) => void,
+  ) => void;
+  isRemoveEntryLoading: boolean;
+  pathname: string;
+  router: AppRouterInstance;
 }
 
-export default function ContentHeader({ removeEntry }: Props) {
-  const pathname = usePathname();
-  const router = useRouter();
-
+export default function ContentHeader({
+  removeEntry,
+  isRemoveEntryLoading,
+  router,
+  pathname,
+}: Props) {
   let entityID: string = "";
 
   const path = pathname.split("/").reduce((acc, p) => {
@@ -44,7 +51,7 @@ export default function ContentHeader({ removeEntry }: Props) {
   }, [] as Path[]);
 
   const handleRemoveEntry = () => {
-    removeEntry(entityID, router);
+    removeEntry(entityID, router, createToastSuccess);
   };
 
   return (
@@ -97,7 +104,10 @@ export default function ContentHeader({ removeEntry }: Props) {
               Удалить запись
             </Button>
           </Dialog.Trigger>
-          <RemoveEntryDialog removeEntry={handleRemoveEntry} />
+          <RemoveEntryDialog
+            removeEntry={handleRemoveEntry}
+            isRemoveEntryLoading={isRemoveEntryLoading}
+          />
         </Dialog.Root>
       )}
     </Flex>

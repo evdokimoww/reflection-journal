@@ -3,6 +3,7 @@ import {
   AuthForm,
   ForgotPasswordForm,
   UpdatePasswordForm,
+  ResponseError,
 } from "@/shared/types";
 
 export interface AuthState {

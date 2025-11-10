@@ -69,7 +69,7 @@ export function EntryCreateComponent() {
           isTagsLoading={isTagsLoading}
           searchedTags={searchedTags}
           onTagsSearch={fetchSearchedTags}
-          saveEntry={createEntry}
+          createEntry={createEntry}
         />
       )}
     </>
