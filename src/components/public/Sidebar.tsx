@@ -1,19 +1,23 @@
-"use client";
-
 import Link from "next/link";
-import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Skeleton, Text } from "@chakra-ui/react";
 import NavItem from "@/components/public/NavItem";
 import { SIDEBAR_MENU_LINKS } from "@/shared/data/sidebar.data";
-import { usePathname } from "next/navigation";
 import { PAGES } from "@/shared/constants.ts";
 import { SidebarBottomLink } from "@/components/public/SidebarBottomLink";
 
 interface Props {
+  pathname: string;
   onSignOut: () => void;
+  isProfileLoading: boolean;
+  userEmail: string;
 }
 
-export default function Sidebar({ onSignOut }: Props) {
-  const pathname = usePathname();
+export default function Sidebar({
+  pathname,
+  onSignOut,
+  isProfileLoading,
+  userEmail,
+}: Props) {
   const originalPathname = "/" + (pathname.split("/").filter(Boolean)[0] || "");
 
   return (
@@ -60,16 +64,16 @@ export default function Sidebar({ onSignOut }: Props) {
           <Avatar.Fallback name="User Name" />
         </Avatar.Root>
         <Box>
-          <Link href={PAGES.PROFILE}>
-            <SidebarBottomLink
-              isActive={PAGES.PROFILE.includes(originalPathname)}
-            >
-              username@mail.ru
-            </SidebarBottomLink>
-          </Link>
-          <Link href={PAGES.AUTH}>
-            <SidebarBottomLink onClick={onSignOut}>Выйти</SidebarBottomLink>
-          </Link>
+          {isProfileLoading ? (
+            <Skeleton height="5" width="150px" />
+          ) : (
+            <Link href={PAGES.PROFILE}>
+              <SidebarBottomLink isActive={PAGES.PROFILE === originalPathname}>
+                {userEmail}
+              </SidebarBottomLink>
+            </Link>
+          )}
+          <SidebarBottomLink onClick={onSignOut}>Выйти</SidebarBottomLink>
         </Box>
       </Flex>
     </Flex>

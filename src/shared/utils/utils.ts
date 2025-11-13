@@ -1,11 +1,15 @@
 import { toaster } from "@/components/ui/toaster";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 
-export const createToastError = (error: string | Error) => {
+export const createToastError = (
+  error: string | Error | { message: string },
+) => {
   let errorMessage = "Неизвестная ошибка";
 
   if (error instanceof Error) {
     if (isRedirectError(error)) return;
+    errorMessage = error.message;
+  } else if (typeof error === "object" && error !== null) {
     errorMessage = error.message;
   } else {
     errorMessage = error;

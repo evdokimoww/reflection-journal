@@ -2,6 +2,7 @@ import {
   AuthForm,
   AuthMode,
   ForgotPasswordForm,
+  ResponseError,
   UpdatePasswordForm,
 } from "@/shared/types";
 import {

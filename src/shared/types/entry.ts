@@ -57,5 +57,3 @@ export interface CreateEntryRequestData {
 export interface UpdateEntryRequestData extends CreateEntryRequestData {
   id: string;
 }
-
-export type EntryRequestData = CreateEntryRequestData | UpdateEntryRequestData;

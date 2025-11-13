@@ -63,7 +63,6 @@ export default function ContentHeader({
       position="sticky"
       top="0"
       bg="white"
-      zIndex="10"
       pl="8"
     >
       <Breadcrumb.Root size="lg" fontWeight="bold">

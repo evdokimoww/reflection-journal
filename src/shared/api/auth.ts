@@ -34,8 +34,22 @@ export async function signUpRequest(formData: AuthForm) {
     return { error };
   }
 
-  if (data.user && data.user.identities && data.user.identities.length === 0) {
-    return { error: new Error("Пользователь с таким email уже существует") };
+  if (data.user && data.user.identities) {
+    if (data.user.identities.length === 0) {
+      return { error: new Error("Пользователь с таким email уже существует") };
+    }
+
+    if (data.user.identities.length !== 0) {
+      // сразу после регистрации прокидываем данные в таблицу profiles
+      const { error: profileError } = await supabase.from("profiles").insert({
+        id: data.user.id,
+        email: data.user.email || formData.email,
+      });
+
+      if (profileError) {
+        return { error: profileError };
+      }
+    }
   }
 
   revalidatePath("/", "layout");

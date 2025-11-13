@@ -13,9 +13,19 @@ import {
 } from "@/shared/stores/auth/hooks";
 import {
   useEntryActions,
+  useEntryError,
   useIsRemoveEntryLoading,
 } from "@/shared/stores/entry/hooks.ts";
 import { usePathname, useRouter } from "next/navigation";
+import {
+  useIsProfileLoading,
+  useProfileActions,
+  useProfileError,
+  useUserEmail,
+} from "@/shared/stores/profile/hooks.ts";
+import { useEntriesError } from "@/shared/stores/entries/hooks.ts";
+import { useMethodologiesError } from "@/shared/stores/methodologies/hooks.ts";
+import { useTagsError } from "@/shared/stores/tags/hooks.ts";
 
 export default function PublicLayout({
   children,
@@ -26,17 +36,41 @@ export default function PublicLayout({
   const router = useRouter();
 
   const { fetchSignOut } = useAuthActions();
-  const error = useAuthError();
   const isLoading = useIsAuthLoading();
-
   const { removeEntry } = useEntryActions();
   const isRemoveEntryLoading = useIsRemoveEntryLoading();
+  const { fetchUserInfo } = useProfileActions();
+  const isProfileLoading = useIsProfileLoading();
+  const userEmail = useUserEmail();
+
+  const authError = useAuthError();
+  const profileError = useProfileError();
+  const entriesError = useEntriesError();
+  const entryError = useEntryError();
+  const methodologiesError = useMethodologiesError();
+  const tagsError = useTagsError();
 
   useEffect(() => {
-    if (error) {
-      createToastError(error);
-    }
-  }, [error]);
+    fetchUserInfo();
+  }, []);
+
+  useEffect(() => {
+    let error =
+      authError ||
+      profileError ||
+      entriesError ||
+      entryError ||
+      methodologiesError ||
+      tagsError;
+    if (error) createToastError(error);
+  }, [
+    authError,
+    profileError,
+    entriesError,
+    entryError,
+    methodologiesError,
+    tagsError,
+  ]);
 
   const handleSignOut = () => {
     fetchSignOut();
@@ -46,7 +80,12 @@ export default function PublicLayout({
     <>
       {isLoading && <Loader />}
       <Flex minH="100vh" w="100%">
-        <Sidebar onSignOut={handleSignOut} />
+        <Sidebar
+          pathname={pathname}
+          onSignOut={handleSignOut}
+          isProfileLoading={isProfileLoading}
+          userEmail={userEmail}
+        />
         <Box minH="100vh" w="100%" position="relative">
           <ContentHeader
             removeEntry={removeEntry}
