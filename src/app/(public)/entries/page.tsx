@@ -73,7 +73,7 @@ export default function EntriesPage() {
     );
 
     return () => unsubscribe();
-  }, [useEntriesStore, fetchEntries]);
+  }, [fetchEntries]);
 
   useEffect(() => {
     if (filtrationType !== FiltrationType.None) {

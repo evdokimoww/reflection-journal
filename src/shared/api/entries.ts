@@ -94,7 +94,7 @@ export async function getFilterValuesRequest() {
 export async function getCurrentEntryRequest(id: string) {
   const supabase = await createClient();
 
-  let query = supabase
+  const query = supabase
     .from("entries")
     .select(
       `
