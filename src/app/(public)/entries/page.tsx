@@ -49,7 +49,7 @@ export default function EntriesPage() {
 
   useEffect(() => {
     fetchEntries();
-  }, []);
+  }, [fetchEntries]);
 
   useEffect(() => {
     const unsubscribe = useEntriesStore.subscribe(
@@ -73,13 +73,13 @@ export default function EntriesPage() {
     );
 
     return () => unsubscribe();
-  }, [useEntriesStore]);
+  }, [useEntriesStore, fetchEntries]);
 
   useEffect(() => {
     if (filtrationType !== FiltrationType.None) {
       fetchFilterValues();
     }
-  }, [filtrationType]);
+  }, [filtrationType, fetchFilterValues]);
 
   const router = useRouter();
 

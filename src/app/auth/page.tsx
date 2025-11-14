@@ -44,7 +44,7 @@ export default function AuthPage() {
       createToastError(error);
       setError("email", { type: "manual" });
     }
-  }, [error]);
+  }, [error, setError]);
 
   const handleSighUp = (formData: AuthForm) => {
     fetchSignUp(formData);

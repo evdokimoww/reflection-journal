@@ -59,11 +59,11 @@ export async function getEntriesRequest(
 
     const { data, error } = await query.overrideTypes<
       {
-        id: any;
-        created_at: any;
-        title: any;
-        methodology: { title: any }; // перезаписываем тип возвращаемых данных из-за генерации типизации ide (думает что methodology это массив)
-        tags: { tag: { value: any } }[];
+        id: string;
+        created_at: string;
+        title: string;
+        methodology: { title: string }; // перезаписываем тип возвращаемых данных из-за генерации типизации ide (думает что methodology это массив)
+        tags: { tag: { value: string } }[];
       }[]
     >();
 
@@ -109,11 +109,11 @@ export async function getCurrentEntryRequest(id: string) {
     .eq("id", id)
     .single()
     .overrideTypes<{
-      id: any;
-      title: any;
-      methodology: { id: any }; // перезаписываем тип возвращаемых данных из-за генерации типизации ide (думает что methodology это массив)
-      tags: { tag: { id: any; value: any } }[];
-      steps: { id: any; value: any; step_id: any }[];
+      id: string;
+      title: string;
+      methodology: { id: string }; // перезаписываем тип возвращаемых данных из-за генерации типизации ide (думает что methodology это массив)
+      tags: { tag: { id: string; value: string } }[];
+      steps: { id: string; value: string; step_id: string }[];
     }>();
 
   const { data, error } = await query;
@@ -260,7 +260,9 @@ export async function updateEntryRequest(
     .eq("user_id", user.id);
 
   if (currentTagsError) return { data: null, error: currentTagsError };
-  const currentTagIds = currentTags.map((t: any) => t.tag_id);
+  const currentTagIds: string[] = currentTags.map(
+    (t: { tag_id: string }) => t.tag_id,
+  );
 
   // 3. Формируем новые id тегов (создавая новые, если требуется)
   const newTagIds: string[] = [];

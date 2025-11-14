@@ -35,16 +35,25 @@ export const createToastSuccess = (message: string) => {
 };
 
 // Сортировка массива объектов по JSON-строке для стабильного сравнения
-function sortArray(arr: any[]): any[] {
+function sortArray<T>(arr: T[]): T[] {
   return arr
-    .map((item) => (typeof item === "object" ? JSON.stringify(item) : item))
+    .map((item) =>
+      typeof item === "object" && item !== null
+        ? JSON.stringify(item)
+        : String(item),
+    )
     .sort()
-    .map((str) => {
-      try {
-        return JSON.parse(str);
-      } catch {
-        return str;
+    .map((str, idx) => {
+      // Возвращаем исходного типа, если это был не объект — иначе парсим обратно
+      if (typeof arr[idx] === "object" && arr[idx] !== null) {
+        try {
+          return JSON.parse(str) as T;
+        } catch {
+          return arr[idx];
+        }
       }
+      // Для примитивов возвращаем значение оригинального типа
+      return arr[idx];
     });
 }
 

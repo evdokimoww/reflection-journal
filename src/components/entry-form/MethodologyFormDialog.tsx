@@ -17,7 +17,7 @@ export function MethodologyFormDialog({ title, text }: Props) {
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.Header>
-              <Dialog.Title>Методология "{title}"</Dialog.Title>
+              <Dialog.Title>Методология &quot;{title}&quot;</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
               <p>{text}</p>
