@@ -34,7 +34,7 @@ export function UpdatePasswordFormComponent({
         <Box w="100%">
           <Flex direction="column" align="center" w="100%" justify="center">
             <Stack gap="4" mb="6" w="100%">
-              <PasswordFormField<IUpdatePasswordProps>
+              <PasswordFormField<Props>
                 name="password"
                 control={control}
                 formErrors={formErrors}
