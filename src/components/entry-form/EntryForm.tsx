@@ -54,6 +54,17 @@ export function EntryForm({
     }
   };
 
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    watch,
+  } = useForm<EntryForm>({
+    mode: "onBlur",
+    defaultValues,
+  });
+
   useEffect(() => {
     const updatedDefaultValues = { ...defaultValues };
 
@@ -75,18 +86,7 @@ export function EntryForm({
 
     setDefaultValues(updatedDefaultValues);
     reset(updatedDefaultValues);
-  }, [methodology, entry]);
-
-  const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors },
-    watch,
-  } = useForm<EntryForm>({
-    mode: "onBlur",
-    defaultValues,
-  });
+  }, [methodology, entry, defaultValues, reset]);
 
   const currentFormValues = watch();
 
@@ -96,11 +96,11 @@ export function EntryForm({
     return () => {
       reset();
     };
-  }, []);
+  }, [reset]);
 
   const isFormDirty = useMemo(() => {
     return !deepEqualFormValues<EntryForm>(currentFormValues, defaultValues);
-  }, [currentFormValues]);
+  }, [currentFormValues, defaultValues]);
 
   const handleFormSubmit: SubmitHandler<EntryForm> = (data) => {
     if (methodology) {

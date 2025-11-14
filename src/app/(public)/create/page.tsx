@@ -33,7 +33,7 @@ export default function EntryCreatePage() {
 
   useEffect(() => {
     fetchMethodologies();
-  }, []);
+  }, [fetchMethodologies]);
 
   const [changedMethodologyId, setChangedMethodologyId] = useState<string>("");
 

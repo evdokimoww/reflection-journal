@@ -52,10 +52,10 @@ export default function PublicLayout({
 
   useEffect(() => {
     fetchUserInfo();
-  }, []);
+  }, [fetchUserInfo]);
 
   useEffect(() => {
-    let error =
+    const error =
       authError ||
       profileError ||
       entriesError ||

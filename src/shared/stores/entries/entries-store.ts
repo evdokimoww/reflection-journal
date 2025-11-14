@@ -77,7 +77,7 @@ export const useEntriesStore = create<EntriesStore>()(
           const isSortingAsc =
             get().sortingDirection !== SortingDirection.Newest;
 
-          let filter: { type?: FiltrationType; value?: string } = {};
+          const filter: { type?: FiltrationType; value?: string } = {};
 
           const currentFiltrationField =
             STATE_FIELDS_BY_FILTRATION_TYPE[get().filtrationType];

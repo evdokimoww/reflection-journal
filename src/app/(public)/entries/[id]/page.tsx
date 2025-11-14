@@ -34,13 +34,13 @@ export default function EntryPage() {
     return () => {
       resetState();
     };
-  }, []);
+  }, [resetState]);
 
   useEffect(() => {
     if (id) {
       fetchEntry(id);
     }
-  }, [id]);
+  }, [id, fetchEntry]);
 
   return (isLoading || !entry || !currentMethodology) && !entryError ? (
     <Loader />

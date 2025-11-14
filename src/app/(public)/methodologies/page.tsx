@@ -17,7 +17,7 @@ export default function MethodologiesPage() {
 
   useEffect(() => {
     fetchMethodologies();
-  }, []);
+  }, [fetchMethodologies]);
 
   return isLoading ? (
     <Loader />
