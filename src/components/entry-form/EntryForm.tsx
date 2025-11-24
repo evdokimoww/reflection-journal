@@ -86,7 +86,7 @@ export function EntryForm({
 
     setDefaultValues(updatedDefaultValues);
     reset(updatedDefaultValues);
-  }, [methodology, entry, defaultValues, reset]);
+  }, [methodology, entry, reset, setDefaultValues]);
 
   const currentFormValues = watch();
 
