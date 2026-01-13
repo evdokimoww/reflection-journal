@@ -8,7 +8,7 @@ export default function AuthLayout({
 }>) {
   return (
     <Box position="relative" h="100vh">
-      <AbsoluteCenter>{children}</AbsoluteCenter>
+      <AbsoluteCenter w="100%">{children}</AbsoluteCenter>
     </Box>
   );
 }

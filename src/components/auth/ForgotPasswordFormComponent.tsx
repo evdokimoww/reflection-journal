@@ -21,23 +21,38 @@ export function ForgotPasswordFormComponent({
 }: Props) {
   return (
     <Flex
-      w={{ md: 80 }}
+      w="100%"
+      maxW={{ base: "100%", sm: "22rem", md: "26rem" }}
       direction="column"
       justify="space-between"
       align="center"
+      px={{ base: 4, sm: 0 }}
     >
       <Flex direction="column" justify="center" align="center" w="100%">
-        <Text fontSize="2xl" fontWeight="bold" mb="4">
+        <Text
+          fontSize={{ base: "xl", md: "2xl" }}
+          fontWeight="bold"
+          mb={{ base: 3, md: 4 }}
+          textAlign="center"
+        >
           Reflection Journal
         </Text>
-        <Text fontSize="sm" mb="4" textAlign="center">
+        <Text
+          fontSize={{ base: "sm", md: "md" }}
+          mb={{ base: 4, md: 5 }}
+          textAlign="center"
+        >
           Забыли пароль?
           <br />
           Укажите ваш e-mail для восстановления
         </Text>
         <Box w="100%">
           <Flex direction="column" align="center" w="100%" justify="center">
-            <Stack gap="4" mb="6" w="100%">
+            <Stack
+              gap={{ base: 3, md: 4 }}
+              mb={{ base: 4, md: 6 }}
+              w="100%"
+            >
               <EmailFormField<ForgotPasswordForm>
                 name="email"
                 control={control}
@@ -49,13 +64,15 @@ export function ForgotPasswordFormComponent({
               type="submit"
               onClick={onFormSubmit}
               loading={isLoading}
-              mb="4"
+              mb={{ base: 3, md: 4 }}
+              w="100%"
+              size={{ base: "sm", md: "md" }}
             >
               Восстановить
             </Button>
             <Button
               variant="surface"
-              size="xs"
+              size={{ base: "xs", md: "sm" }}
               onClick={onBackButtonClick}
               disabled={isLoading}
             >

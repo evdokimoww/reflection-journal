@@ -19,21 +19,36 @@ export function UpdatePasswordFormComponent({
 }: Props) {
   return (
     <Flex
-      w={{ md: 80 }}
+      w="100%"
+      maxW={{ base: "100%", sm: "22rem", md: "26rem" }}
       direction="column"
       justify="space-between"
       align="center"
+      px={{ base: 4, sm: 0 }}
     >
       <Flex direction="column" justify="center" align="center" w="100%">
-        <Text fontSize="2xl" fontWeight="bold" mb="4">
+        <Text
+          fontSize={{ base: "xl", md: "2xl" }}
+          fontWeight="bold"
+          mb={{ base: 3, md: 4 }}
+          textAlign="center"
+        >
           Reflection Journal
         </Text>
-        <Text fontSize="sm" mb="4" textAlign="center">
+        <Text
+          fontSize={{ base: "sm", md: "md" }}
+          mb={{ base: 4, md: 5 }}
+          textAlign="center"
+        >
           Введите новый пароль
         </Text>
         <Box w="100%">
           <Flex direction="column" align="center" w="100%" justify="center">
-            <Stack gap="4" mb="6" w="100%">
+            <Stack
+              gap={{ base: 3, md: 4 }}
+              mb={{ base: 4, md: 6 }}
+              w="100%"
+            >
               <PasswordFormField<UpdatePasswordForm>
                 name="password"
                 control={control}
@@ -41,7 +56,13 @@ export function UpdatePasswordFormComponent({
                 isLoading={isLoading}
               />
             </Stack>
-            <Button type="submit" onClick={onFormSubmit} loading={isLoading}>
+            <Button
+              type="submit"
+              onClick={onFormSubmit}
+              loading={isLoading}
+              w="100%"
+              size={{ base: "sm", md: "md" }}
+            >
               Обновить пароль
             </Button>
           </Flex>

@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Dialog, Flex } from "@chakra-ui/react";
+import { Box, Breadcrumb, Button, Dialog, Flex } from "@chakra-ui/react";
 import { BREADCRUMPS_PAGE_NAMES } from "@/shared/data/breadcrumbs.data";
 import React, { Fragment } from "react";
 import { PAGES } from "@/shared/constants.ts";
@@ -21,6 +21,7 @@ interface Props {
   isRemoveEntryLoading: boolean;
   pathname: string;
   router: AppRouterInstance;
+  onOpenSidebar: () => void;
 }
 
 export default function ContentHeader({
@@ -28,6 +29,7 @@ export default function ContentHeader({
   isRemoveEntryLoading,
   router,
   pathname,
+  onOpenSidebar,
 }: Props) {
   let entityID: string = "";
 
@@ -63,35 +65,46 @@ export default function ContentHeader({
       position="sticky"
       top="0"
       bg="white"
-      pl="8"
+      pl="4"
+      pr="4"
     >
-      <Breadcrumb.Root size="lg" fontWeight="bold">
-        <Breadcrumb.List>
-          {path.length > 0 ? (
-            path.map((p: Path, index) => {
-              return (
-                <Fragment key={p.name}>
-                  {index !== path.length - 1 ? (
-                    <Link href={`/${p.link}`}>
-                      <Breadcrumb.Item>{p.name}</Breadcrumb.Item>
-                    </Link>
-                  ) : (
-                    <Breadcrumb.CurrentLink>{p.name}</Breadcrumb.CurrentLink>
-                  )}
-                  {index < path.length - 1 && <Breadcrumb.Separator />}
-                </Fragment>
-              );
-            })
-          ) : (
-            <Breadcrumb.Item>
-              <Breadcrumb.CurrentLink>Дашборд</Breadcrumb.CurrentLink>
-            </Breadcrumb.Item>
-          )}
-        </Breadcrumb.List>
-      </Breadcrumb.Root>
+      <Button
+        variant="ghost"
+        size="sm"
+        display={{ base: "inline-flex", md: "none" }}
+        onClick={onOpenSidebar}
+      >
+        &#9776;
+      </Button>
+      <Box overflow="hidden" flex="1">
+        <Breadcrumb.Root size="lg" fontWeight="bold">
+          <Breadcrumb.List>
+            {path.length > 0 ? (
+              path.map((p: Path, index) => {
+                return (
+                  <Fragment key={p.name}>
+                    {index !== path.length - 1 ? (
+                      <Link href={`/${p.link}`}>
+                        <Breadcrumb.Item>{p.name}</Breadcrumb.Item>
+                      </Link>
+                    ) : (
+                      <Breadcrumb.CurrentLink>{p.name}</Breadcrumb.CurrentLink>
+                    )}
+                    {index < path.length - 1 && <Breadcrumb.Separator />}
+                  </Fragment>
+                );
+              })
+            ) : (
+              <Breadcrumb.Item>
+                <Breadcrumb.CurrentLink>Дашборд</Breadcrumb.CurrentLink>
+              </Breadcrumb.Item>
+            )}
+          </Breadcrumb.List>
+        </Breadcrumb.Root>
+      </Box>
       {pathname === PAGES.ENTRIES && (
         <Link href={PAGES.CREATE_ENTRY}>
-          <Button variant="surface" size="sm">
+          <Button variant="surface" size="sm" ml="2">
             + Новая запись
           </Button>
         </Link>

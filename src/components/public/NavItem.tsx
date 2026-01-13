@@ -5,12 +5,14 @@ import type { SidebarMenuItem } from "@/shared/data/sidebar.data";
 interface Props {
   link: SidebarMenuItem;
   isActive: boolean;
+  onClick?: () => void;
 }
 
-export default function NavItem({ link, isActive }: Props) {
+export default function NavItem({ link, isActive, onClick }: Props) {
   return (
     <Link href={link.href}>
       <Box
+        onClick={onClick}
         _hover={{
           bg: "gray.400",
           color: "white",

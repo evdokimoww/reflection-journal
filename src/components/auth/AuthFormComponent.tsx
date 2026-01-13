@@ -26,13 +26,20 @@ export function AuthFormComponent({
 }: Props) {
   return (
     <Flex
-      w={{ md: 80 }}
+      w="100%"
+      maxW={{ base: "100%", sm: "22rem", md: "26rem" }}
       direction="column"
       justify="space-between"
       align="center"
+      px={{ base: 4, sm: 0 }}
     >
       <Flex direction="column" justify="center" align="center" w="100%">
-        <Text fontSize="2xl" fontWeight="bold" mb="4">
+        <Text
+          fontSize={{ base: "xl", md: "2xl" }}
+          fontWeight="bold"
+          mb={{ base: 3, md: 4 }}
+          textAlign="center"
+        >
           Reflection Journal
         </Text>
         <SegmentGroup.Root
@@ -47,7 +54,11 @@ export function AuthFormComponent({
         </SegmentGroup.Root>
         <Box w="100%">
           <Flex direction="column" align="center" w="100%" justify="center">
-            <Stack gap="4" mb="6" w="100%">
+            <Stack
+              gap={{ base: 3, md: 4 }}
+              mb={{ base: 4, md: 6 }}
+              w="100%"
+            >
               <EmailFormField<AuthForm>
                 name="email"
                 control={control}
@@ -64,7 +75,7 @@ export function AuthFormComponent({
                 <Link href={PAGES.FORGOT_PASSWORD}>
                   <Text
                     color="gray.500"
-                    fontSize="sm"
+                    fontSize={{ base: "xs", md: "sm" }}
                     textDecoration="underline"
                   >
                     Забыли пароль?
@@ -72,7 +83,13 @@ export function AuthFormComponent({
                 </Link>
               )}
             </Stack>
-            <Button type="submit" onClick={onFormSubmit} loading={isLoading}>
+            <Button
+              type="submit"
+              onClick={onFormSubmit}
+              loading={isLoading}
+              w="100%"
+              size={{ base: "sm", md: "md" }}
+            >
               {authMode === AuthMode.Login ? "Войти" : "Зарегистрироваться"}
             </Button>
           </Flex>
