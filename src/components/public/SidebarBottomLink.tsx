@@ -21,6 +21,11 @@ export function SidebarBottomLink({
         textDecoration: "underline",
         cursor: "pointer",
       }}
+      maxW={{ base: "10rem", md: "100%" }}
+      w="100%"
+      whiteSpace="nowrap"
+      overflow="hidden"
+      textOverflow="ellipsis"
     >
       {children}
     </Box>

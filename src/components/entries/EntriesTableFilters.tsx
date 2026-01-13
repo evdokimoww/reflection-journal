@@ -38,7 +38,7 @@ export function EntriesTableFilters({
   changedTagFilterValue,
 }: Props) {
   return (
-    <Flex gap="8" mb="4">
+    <Flex gap={{ base: 1, md: 8 }} mb="4" direction={{ base: "column", md: "row" }}>
       <EntriesTableSingleFilter
         fieldName="Сортировка"
         items={TABLE_SORT_ITEMS}

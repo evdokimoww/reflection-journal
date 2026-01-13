@@ -58,26 +58,31 @@ export default function ContentHeader({
 
   return (
     <Flex
-      h="20"
+      h={{ base: "16", md: "20" }}
       w="100%"
       align="center"
-      gap="4"
+      gap={{ base: 2, md: 4 }}
       position="sticky"
       top="0"
       bg="white"
-      pl="4"
-      pr="4"
+      pl={{ base: 3, md: 4 }}
+      pr={{ base: 3, md: 4 }}
+      zIndex="sticky"
     >
       <Button
         variant="ghost"
-        size="sm"
+        size={{ base: "xs", md: "sm" }}
         display={{ base: "inline-flex", md: "none" }}
         onClick={onOpenSidebar}
+        flexShrink={0}
       >
         &#9776;
       </Button>
-      <Box overflow="hidden" flex="1">
-        <Breadcrumb.Root size="lg" fontWeight="bold">
+      <Box overflow="hidden" flex="1" minW="0">
+        <Breadcrumb.Root
+          size={{ base: "sm", md: "lg" }}
+          fontWeight="bold"
+        >
           <Breadcrumb.List>
             {path.length > 0 ? (
               path.map((p: Path, index) => {
@@ -104,7 +109,13 @@ export default function ContentHeader({
       </Box>
       {pathname === PAGES.ENTRIES && (
         <Link href={PAGES.CREATE_ENTRY}>
-          <Button variant="surface" size="sm" ml="2">
+          <Button
+            variant="surface"
+            size={{ base: "xs", md: "sm" }}
+            ml={{ base: 1, md: 2 }}
+            flexShrink={0}
+            display={{ base: "none", sm: "inline-flex" }}
+          >
             + Новая запись
           </Button>
         </Link>
@@ -112,8 +123,17 @@ export default function ContentHeader({
       {entityID && (
         <Dialog.Root role="alertdialog" size="xs">
           <Dialog.Trigger asChild>
-            <Button variant="surface" size="sm">
-              Удалить запись
+            <Button
+              variant="surface"
+              size={{ base: "xs", md: "sm" }}
+              flexShrink={0}
+            >
+              <Box as="span" display={{ base: "none", sm: "inline" }}>
+                Удалить запись
+              </Box>
+              <Box as="span" display={{ base: "inline", sm: "none" }}>
+                Удалить
+              </Box>
             </Button>
           </Dialog.Trigger>
           <RemoveEntryDialog
