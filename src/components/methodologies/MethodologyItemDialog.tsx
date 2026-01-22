@@ -18,7 +18,7 @@ export function MethodologyItemDialog({ methodology }: Props) {
     <Portal>
       <Dialog.Backdrop />
       <Dialog.Positioner>
-        <Dialog.Content>
+        <Dialog.Content maxW={{base: "22rem", md: "36rem" }} w="100%">
           <Dialog.Header>
             <Dialog.Title>{methodology.title}</Dialog.Title>
           </Dialog.Header>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { Box } from "@chakra-ui/react";
 import {
   useEntryActions,
   useIsEntryLoading,
@@ -48,7 +49,7 @@ export default function EntryCreatePage() {
   return isMethodologiesLoading || isEntryLoading ? (
     <Loader />
   ) : (
-    <>
+    <Box w="100%" maxW={{ base: "100%", lg: "1200px" }} mx="auto">
       <ChangeMethodologyCards
         methodologies={methodologies}
         onMethodologyChange={handleMethodologyChange}
@@ -62,6 +63,6 @@ export default function EntryCreatePage() {
           createEntry={createEntry}
         />
       )}
-    </>
+    </Box>
   );
 }

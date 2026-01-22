@@ -1,4 +1,4 @@
-import { Box, CheckboxGroup, Flex, HStack, RadioCard } from "@chakra-ui/react";
+import { Box, CheckboxGroup, Flex, RadioCard, Text } from "@chakra-ui/react";
 import React from "react";
 import { Methodology } from "@/shared/types";
 
@@ -12,12 +12,18 @@ export function ChangeMethodologyCards({
   onMethodologyChange,
 }: Props) {
   return (
-    <Box mb="8">
-      <CheckboxGroup maxW="800px">
-        Выбор методологии:
-        <Flex gap="2">
+    <Box mb={{ base: 6, md: 8 }}>
+      <CheckboxGroup maxW={{ base: "100%", md: "800px" }}>
+        <Text mb={{ base: 3, md: 4 }} fontSize={{ base: "sm", md: "md" }}>
+          Выбор методологии:
+        </Text>
+        <Flex gap={{ base: 2, md: 2 }} direction={{ base: "column", md: "row" }}>
           <RadioCard.Root>
-            <HStack align="stretch">
+            <Flex
+              direction={{ base: "column", md: "row" }}
+              gap={{ base: 2, md: 2 }}
+              align="stretch"
+            >
               {methodologies.map((item) => (
                 <RadioCard.Item
                   key={item.id}
@@ -36,7 +42,7 @@ export function ChangeMethodologyCards({
                   </RadioCard.ItemControl>
                 </RadioCard.Item>
               ))}
-            </HStack>
+            </Flex>
           </RadioCard.Root>
         </Flex>
       </CheckboxGroup>

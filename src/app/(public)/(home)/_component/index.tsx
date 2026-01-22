@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  AbsoluteCenter,
   Box,
   Button,
   Flex,
@@ -17,26 +16,30 @@ interface Props {
 
 export function DashboardPageView({ username, isProfileLoading }: Props) {
   return (
-    <Box position="absolute" h="100%" width="100%" top="0" right="0">
-      <AbsoluteCenter>
-        <Flex align="center" justify="center" direction="column">
-          <Flex align="center" justify="center" gap="2">
-            <Text fontSize="2xl" fontWeight="bold" mb="2">
-              Привет,
+    <Box h="100%" width="100%">
+      <Flex
+        align="center"
+        justify="center"
+        direction="column"
+        h="100%"
+        py={{ base: 8, md: 0 }}
+      >
+        <Flex align="center" justify="center" gap="2" mb="4">
+          <Text fontSize="2xl" fontWeight="bold">
+            Привет,
+          </Text>
+          {isProfileLoading ? (
+            <Skeleton w="150px" h="6" />
+          ) : (
+            <Text fontSize="2xl" fontWeight="bold">
+              {username}
             </Text>
-            {isProfileLoading ? (
-              <Skeleton w="150px" h="6" />
-            ) : (
-              <Text fontSize="2xl" fontWeight="bold" mb="2">
-                {username}
-              </Text>
-            )}
-          </Flex>
-          <Link href={PAGES.CREATE_ENTRY}>
-            <Button size="lg">+ Новая запись</Button>
-          </Link>
+          )}
         </Flex>
-      </AbsoluteCenter>
+        <Link href={PAGES.CREATE_ENTRY}>
+          <Button size="lg">+ Новая запись</Button>
+        </Link>
+      </Flex>
     </Box>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Box } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { EntryFormView } from "@/components/entry-form/EntryFormView";
 import { FormActionBar } from "@/components/entry-form/FormActionBar";
@@ -109,13 +110,15 @@ export function EntryForm({
         methodologyId: methodology.id,
       };
 
-      entry && updateEntry
-        ? updateEntry(
-            { id: entry.id, ...requestData },
-            router,
-            createToastSuccess,
-          )
-        : createEntry && createEntry(requestData, router);
+      if (entry && updateEntry) {
+        updateEntry(
+          { id: entry.id, ...requestData },
+          router,
+          createToastSuccess,
+        );
+      } else if (createEntry) {
+        createEntry(requestData, router);
+      }
     }
   };
 
@@ -132,15 +135,17 @@ export function EntryForm({
     <div>нет данных о методологии</div> // todo
   ) : (
     <>
-      <EntryFormView
-        methodology={methodology}
-        control={control}
-        errors={errors}
-        tagInputRef={tagInputRef}
-        onTagsSearch={handleTagsSearch}
-        isTagsLoading={isTagsLoading}
-        searchedTags={searchedTags}
-      />
+      <Box pb={isFormDirty ? { base: "80px", md: "100px" } : 0}>
+        <EntryFormView
+          methodology={methodology}
+          control={control}
+          errors={errors}
+          tagInputRef={tagInputRef}
+          onTagsSearch={handleTagsSearch}
+          isTagsLoading={isTagsLoading}
+          searchedTags={searchedTags}
+        />
+      </Box>
       {isFormDirty && (
         <FormActionBar
           isEditForm={!!isEditForm}

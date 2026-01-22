@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Avatar, Box, Flex, Skeleton, Text } from "@chakra-ui/react";
+import { Avatar, Box, Flex, IconButton, Skeleton, Text } from "@chakra-ui/react";
 import NavItem from "@/components/public/NavItem";
 import { SIDEBAR_MENU_LINKS } from "@/shared/data/sidebar.data";
 import { PAGES } from "@/shared/constants.ts";
@@ -10,6 +10,7 @@ interface Props {
   onSignOut: () => void;
   isProfileLoading: boolean;
   userEmail: string;
+  onClose?: () => void;
 }
 
 export default function Sidebar({
@@ -17,6 +18,7 @@ export default function Sidebar({
   onSignOut,
   isProfileLoading,
   userEmail,
+  onClose,
 }: Props) {
   const originalPathname = "/" + (pathname.split("/").filter(Boolean)[0] || "");
 
@@ -35,14 +37,27 @@ export default function Sidebar({
           h="20"
           mx="8"
           mb="8"
-          direction="column"
-          justify="center"
+          align="center"
+          justify="space-between"
           position="sticky"
           top="0"
         >
           <Text fontSize={{ md: "lg", lg: "xl" }} fontWeight="bold">
             Reflection Journal
           </Text>
+          {onClose && (
+            <IconButton
+              aria-label="Закрыть меню"
+              size="sm"
+              variant="ghost"
+              display={{ base: "inline-flex", md: "none" }}
+              onClick={onClose}
+            >
+              <Box as="span" fontSize="lg">
+                &times;
+              </Box>
+            </IconButton>
+          )}
         </Flex>
         <Flex mx="8" direction="column">
           {SIDEBAR_MENU_LINKS.map((link) => (
@@ -50,6 +65,7 @@ export default function Sidebar({
               key={link.name}
               link={link}
               isActive={link.href === originalPathname}
+              onClick={onClose}
             />
           ))}
         </Flex>
@@ -68,12 +84,22 @@ export default function Sidebar({
             <Skeleton height="5" width="150px" />
           ) : (
             <Link href={PAGES.PROFILE}>
-              <SidebarBottomLink isActive={PAGES.PROFILE === originalPathname}>
+              <SidebarBottomLink
+                isActive={PAGES.PROFILE === originalPathname}
+                onClick={onClose}
+              >
                 {userEmail}
               </SidebarBottomLink>
             </Link>
           )}
-          <SidebarBottomLink onClick={onSignOut}>Выйти</SidebarBottomLink>
+          <SidebarBottomLink
+            onClick={() => {
+              onSignOut();
+              onClose?.();
+            }}
+          >
+            Выйти
+          </SidebarBottomLink>
         </Box>
       </Flex>
     </Flex>

@@ -37,7 +37,7 @@ export function EntryFormView({
   searchedTags,
 }: Props) {
   return (
-    <Flex direction="column" maxW="1200px" gap="6">
+    <Flex direction="column" maxW={{ base: "100%", lg: "1200px" }} gap={{ base: 4, md: 6 }}>
       <Controller
         name="title"
         control={control}
@@ -52,7 +52,7 @@ export function EntryFormView({
           return (
             <Field.Root invalid={!!errors?.title}>
               <Field.Label>Заголовок</Field.Label>
-              <Input size="lg" {...field} />
+              <Input size={{ base: "md", md: "lg" }} {...field} />
               {!!errors?.title && (
                 <Field.ErrorText>{errors?.title.message}</Field.ErrorText>
               )}
@@ -80,13 +80,14 @@ export function EntryFormView({
       />
       {methodology.description && (
         <Flex
-          gap="4"
+          gap={{ base: 2, md: 4 }}
           width="100%"
+          direction={{ base: "column", md: "row" }}
           justify="space-between"
-          align="center"
-          mb="4"
+          align={{ base: "flex-start", md: "center" }}
+          mb={{ base: 3, md: 4 }}
         >
-          <Text fontSize="sm" color="gray.600">
+          <Text fontSize={{ base: "xs", md: "sm" }} color="gray.600">
             {methodology.description}
           </Text>
           {methodology.theory && (
@@ -98,8 +99,14 @@ export function EntryFormView({
         </Flex>
       )}
       {methodology.steps.map((step: Step, index: number) => (
-        <Flex key={step.id} gap="4" width="100%" justify="space-between">
-          <Flex gap="2" w="220px">
+        <Flex
+          key={step.id}
+          gap={{ base: 3, md: 4 }}
+          width="100%"
+          direction={{ base: "column", md: "row" }}
+          justify="space-between"
+        >
+          <Flex gap="2" w={{ base: "100%", md: "220px" }} flexShrink={0}>
             {step?.hint && (
               <ToggleTip
                 content={step.hint}
@@ -114,6 +121,7 @@ export function EntryFormView({
                   justify="center"
                   align="center"
                   cursor="pointer"
+                  flexShrink={0}
                 >
                   <Icon size="lg">
                     <Image src={Question} alt="Logo" width={20} height={20} />
@@ -123,7 +131,7 @@ export function EntryFormView({
             )}
 
             <Box>
-              <Text fontWeight="bold" fontSize="md">
+              <Text fontWeight="bold" fontSize={{ base: "sm", md: "md" }}>
                 {step?.question}
               </Text>
               {step?.description && (
@@ -137,7 +145,7 @@ export function EntryFormView({
             name={`steps.${index}.value`}
             control={control}
             render={({ field }) => {
-              return <Textarea size="lg" {...field} />;
+              return <Textarea size={{ base: "md", md: "lg" }} {...field} />;
             }}
           />
         </Flex>
