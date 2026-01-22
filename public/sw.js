@@ -2,7 +2,7 @@
 const CACHE_NAME = 'reflection-journal-v1';
 const urlsToCache = [
   '/',
-  '/manifest.json',
+  '/manifest.webmanifest',
   '/web-app-manifest-192x192.png',
   '/web-app-manifest-512x512.png',
 ];
